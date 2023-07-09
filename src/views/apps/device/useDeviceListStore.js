@@ -4,14 +4,11 @@ import { defineStore } from 'pinia'
 export const useDeviceListStore = defineStore('DeviceListStore', {
   actions: {
     // 👉 Fetch devices data
-    fetchDevices(params) { return axios.post('http://localhost:8000/devices/search', {
+    fetchDevices(params) { return axios.post('http://localhost:8000/devices/q', {
       filter: params,
     } ) },
 
-    // 👉 Search devices data
-    searchDevices(payload) { return axios.get('/apps/devices/list', { filter: payload }) },
-
-    // 👉 Add Device
+    // 👉 Add New Device
     addDevice(deviceData) {
       return new Promise((resolve, reject) => {
         axios.post('http://localhost:8000/devices', {
@@ -21,10 +18,17 @@ export const useDeviceListStore = defineStore('DeviceListStore', {
       })
     },
 
-    // 👉 fetch single device
+    // 👉 Fetch single device
     fetchDevice(id) {
       return new Promise((resolve, reject) => {
-        axios.get(`/apps/devices/${id}`).then(response => resolve(response)).catch(error => reject(error))
+        axios.get(`http://localhost:8000/devices/${id}`).then(response => resolve(response)).catch(error => reject(error))
+      })
+    },
+
+    // 👉 Update Device
+    updateDevice(deviceData) {
+      return new Promise(async (resolve, reject) => {
+        await axios.put(`http://localhost:8000/devices/${deviceData.id}`, { device: deviceData.device }).then(response => resolve(response)).catch(error => reject(error))
       })
     },
 

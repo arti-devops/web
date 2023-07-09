@@ -1,16 +1,18 @@
 <script setup>
 import { paginationMeta } from '@/@fake-db/utils'
 import AddNewDeviceDrawer from '@/views/apps/device/list/AddNewDeviceDrawer.vue'
+import UpdateDeviceDrawer from '@/views/apps/device/list/UpdateDeviceDrawer.vue'
 import { useDeviceListStore } from '@/views/apps/device/useDeviceListStore'
 import avatar1 from '@images/avatars/avatar-1.png'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
 const deviceListStore = useDeviceListStore()
 
+const totalPage = ref(1)
 const searchQuery = ref('')
 const selectedBrand = ref('')
 const selectedStatus = ref('')
-const totalPage = ref(1)
+const deviceToUpdate = ref({})
 
 const totalDevices = ref(0)
 const devices = ref([])
@@ -120,10 +122,25 @@ const resolveStatusStatusVariant = stat => {
 }
 
 const isAddNewUserDrawerVisible = ref(false)
+const isUpdateDrawerVisible = ref(false)
 
 // Add and refetch Device
-const addNewDevice = deviceData => {
-  deviceListStore.addDevice(deviceData)
+const addNewDevice = async deviceData => {
+  await deviceListStore.addDevice(deviceData)
+  fetchDevices()
+}
+
+// Updqte and refresh Device
+const updateDeviceTrigger = deviceId => {
+  deviceListStore.fetchDevice(deviceId).then(response => {
+    console.log(response.data)
+    deviceToUpdate.value = response.data
+    isUpdateDrawerVisible.value = true
+  })
+}
+
+const updateDevice = async deviceData => {
+  await deviceListStore.updateDevice(deviceData)
   fetchDevices()
 }
 
@@ -201,6 +218,7 @@ const deleteDevice = async id => {
 
               <!-- 👉 Export button -->
               <VBtn
+                disabled
                 variant="tonal"
                 color="secondary"
                 prepend-icon="tabler-screen-share"
@@ -300,7 +318,7 @@ const deleteDevice = async id => {
               <IconBtn>
                 <VIcon
                   icon="tabler-edit"
-                  @click="isAddNewUserDrawerVisible = true"
+                  @click="updateDeviceTrigger(item.raw.device_id)"
                 />
               </IconBtn>
               <VBtn
@@ -327,12 +345,9 @@ const deleteDevice = async id => {
                       <VListItemTitle>View</VListItemTitle>
                     </VListItem>
 
-                    <VListItem link>
+                    <VListItem @click="updateDeviceTrigger(item.raw.device_id)">
                       <template #prepend>
-                        <VIcon
-                          icon="tabler-edit"
-                          @click="isAddNewUserDrawerVisible = true"
-                        />
+                        <VIcon icon="tabler-edit" />
                       </template>
                       <VListItemTitle>Edit</VListItemTitle>
                     </VListItem>
@@ -393,6 +408,11 @@ const deleteDevice = async id => {
         <AddNewDeviceDrawer
           v-model:isDrawerOpen="isAddNewUserDrawerVisible"
           @user-data="addNewDevice"
+        />
+        <UpdateDeviceDrawer
+          v-model:isDrawerOpen="isUpdateDrawerVisible"
+          :device-to-update="deviceToUpdate"
+          @device-data="updateDevice"
         />
       </vcol>
     </vrow>

@@ -9,11 +9,16 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  deviceToUpdate: {
+    type: Object,
+    required: true,
+  },
 })
 
 const emit = defineEmits([
   'update:isDrawerOpen',
-  'userData',
+  'deviceData',
+  'deviceId',
 ])
 
 const isFormValid = ref(false)
@@ -39,16 +44,18 @@ const closeNavigationDrawer = () => {
 const onSubmit = () => {
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
-      emit('userData', {
-        device_user: deviceUser.value,
-        device_type: deviceType.value,
-        device_brand_name: deviceBrandName.value,
-        device_brand_model: deviceBrandModel.value,
-        device_post_number: devicePostNumber.value,
-        device_ip_address: deviceIPAddress.value,
-        device_status: deviceStatus.value,
-        device_serial_number: deviceSerialNumber.value,
-      })
+      emit('deviceData', {
+        id: props.deviceToUpdate.device_id,
+        device: {
+          device_user: deviceUser.value,
+          device_type: deviceType.value,
+          device_brand_name: deviceBrandName.value,
+          device_brand_model: deviceBrandModel.value,
+          device_post_number: devicePostNumber.value,
+          device_ip_address: deviceIPAddress.value,
+          device_status: deviceStatus.value,
+          device_serial_number: deviceSerialNumber.value,
+        } })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
         refForm.value?.reset()
@@ -61,6 +68,25 @@ const onSubmit = () => {
 const handleDrawerModelValueUpdate = val => {
   emit('update:isDrawerOpen', val)
 }
+
+const resolveDeviceStatusString = stat => {
+  if(stat === "connected") return 'En ligne'
+  
+  return 'Hors ligne'
+}
+
+const fillVaiables = () => {
+  deviceType.value = props.deviceToUpdate.device_type
+  deviceSerialNumber.value = props.deviceToUpdate.device_serial_number
+  deviceBrandName.value = props.deviceToUpdate.device_brand_name
+  deviceBrandModel.value = props.deviceToUpdate.device_brand_model
+  devicePostNumber.value = props.deviceToUpdate.device_post_number
+  deviceIPAddress.value = props.deviceToUpdate.device_ip_address
+  deviceUser.value = props.deviceToUpdate.device_user
+  deviceStatus.value = props.deviceToUpdate.device_status
+}
+
+watchEffect(fillVaiables)
 </script>
 
 <template>
@@ -74,7 +100,7 @@ const handleDrawerModelValueUpdate = val => {
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Nouveau Tél. IP"
+      title="Modification Tél. IP"
       @cancel="closeNavigationDrawer"
     />
 
@@ -159,17 +185,18 @@ const handleDrawerModelValueUpdate = val => {
                   v-model="deviceStatus"
                   label="Status actuel"
                   :rules="[requiredValidator]"
-                  :items="[{ title: 'Hors ligne', value: 'offline' },{ title: 'En line', value: 'connected' }, ]"
+                  :items="[{ title: 'Hors ligne', value: 'offline' },{ title: 'En ligne', value: 'connected' }, ]"
                 />
               </VCol>
 
               <!-- 👉 Submit and Cancel -->
               <VCol cols="12">
                 <VBtn
+                  color="warning"
                   type="submit"
                   class="me-3"
                 >
-                  Valider
+                  Modifier
                 </VBtn>
                 <VBtn
                   type="reset"
