@@ -1,6 +1,11 @@
 export default [
   { heading: 'Apps & Pages' },
   {
+    title: 'Device',
+    icon: { icon: 'tabler-layout-list' },
+    to: 'apps-device-list',
+  },
+  {
     title: 'Email',
     icon: { icon: 'tabler-mail' },
     to: 'apps-email',
