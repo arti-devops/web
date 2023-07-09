@@ -1,12 +1,10 @@
 <script setup>
 import { paginationMeta } from '@/@fake-db/utils'
+import AddNewDeviceDrawer from '@/views/apps/device/list/AddNewDeviceDrawer.vue'
 import { useDeviceListStore } from '@/views/apps/device/useDeviceListStore'
-import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue'
-import { useUserListStore } from '@/views/apps/user/useUserListStore'
 import avatar1 from '@images/avatars/avatar-1.png'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
-const userListStore = useUserListStore()
 const deviceListStore = useDeviceListStore()
 
 const searchQuery = ref('')
@@ -123,53 +121,15 @@ const resolveStatusStatusVariant = stat => {
 
 const isAddNewUserDrawerVisible = ref(false)
 
-const addNewUser = userData => {
-  userListStore.addUser(userData)
-
-  // refetch User
-  fetchUsers()
+// Add and refetch Device
+const addNewDevice = deviceData => {
+  deviceListStore.addDevice(deviceData)
+  fetchDevices()
 }
 
-// 👉 List
-const userListMeta = [
-  {
-    icon: 'tabler-user',
-    color: 'primary',
-    title: 'Session',
-    stats: '21,459',
-    percentage: +29,
-    subtitle: 'Total Users',
-  },
-  {
-    icon: 'tabler-user-plus',
-    color: 'error',
-    title: 'Paid Users',
-    stats: '4,567',
-    percentage: +18,
-    subtitle: 'Last week analytics',
-  },
-  {
-    icon: 'tabler-user-check',
-    color: 'success',
-    title: 'Active Users',
-    stats: '19,860',
-    percentage: -14,
-    subtitle: 'Last week analytics',
-  },
-  {
-    icon: 'tabler-user-exclamation',
-    color: 'warning',
-    title: 'Pending Users',
-    stats: '237',
-    percentage: +42,
-    subtitle: 'Last week analytics',
-  },
-]
-
-const deleteDevice = id => {
-  deviceListStore.deleteDevice(id)
-
-  // refetch User
+// Delete and refetch Device
+const deleteDevice = async id => {
+  await deviceListStore.deleteDevice(id)
   fetchDevices()
 }
 </script>
@@ -331,11 +291,17 @@ const deleteDevice = id => {
 
             <!-- Actions -->
             <template #item.actions="{ item }">
-              <IconBtn :to="{ name: 'apps-user-view-id', params: { id: item.raw.device_id } }">
+              <IconBtn
+                disabled
+                :to="{ name: 'apps-user-view-id', params: { id: item.raw.device_id } }"
+              >
                 <VIcon icon="tabler-file-arrow-right" />
               </IconBtn>
               <IconBtn>
-                <VIcon icon="tabler-edit" />
+                <VIcon
+                  icon="tabler-edit"
+                  @click="isAddNewUserDrawerVisible = true"
+                />
               </IconBtn>
               <VBtn
                 icon
@@ -350,9 +316,12 @@ const deleteDevice = id => {
 
                 <VMenu activator="parent">
                   <VList>
-                    <VListItem :to="{ name: 'apps-user-view-id', params: { id: item.raw.device_id } }">
+                    <VListItem
+                      disabled
+                      :to="{ name: 'apps-user-view-id', params: { id: item.raw.device_id } }"
+                    >
                       <template #prepend>
-                        <VIcon icon="tabler-eye" />
+                        <VIcon icon="tabler-file-arrow-right" />
                       </template>
 
                       <VListItemTitle>View</VListItemTitle>
@@ -360,7 +329,10 @@ const deleteDevice = id => {
 
                     <VListItem link>
                       <template #prepend>
-                        <VIcon icon="tabler-pencil" />
+                        <VIcon
+                          icon="tabler-edit"
+                          @click="isAddNewUserDrawerVisible = true"
+                        />
                       </template>
                       <VListItemTitle>Edit</VListItemTitle>
                     </VListItem>
@@ -418,9 +390,9 @@ const deleteDevice = id => {
         </VCard>
 
         <!-- 👉 Add New User -->
-        <AddNewUserDrawer
+        <AddNewDeviceDrawer
           v-model:isDrawerOpen="isAddNewUserDrawerVisible"
-          @user-data="addNewUser"
+          @user-data="addNewDevice"
         />
       </vcol>
     </vrow>

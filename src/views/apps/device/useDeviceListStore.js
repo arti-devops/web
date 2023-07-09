@@ -5,10 +5,7 @@ export const useDeviceListStore = defineStore('DeviceListStore', {
   actions: {
     // 👉 Fetch devices data
     fetchDevices(params) { return axios.post('http://localhost:8000/devices/search', {
-      q: params.q,
-      brand: params.brand,
-      status: params.status,
-      options: params.options,
+      filter: params,
     } ) },
 
     // 👉 Search devices data
@@ -17,7 +14,7 @@ export const useDeviceListStore = defineStore('DeviceListStore', {
     // 👉 Add Device
     addDevice(deviceData) {
       return new Promise((resolve, reject) => {
-        axios.post('/apps/devices/device', {
+        axios.post('http://localhost:8000/devices', {
           device: deviceData,
         }).then(response => resolve(response))
           .catch(error => reject(error))
@@ -33,8 +30,8 @@ export const useDeviceListStore = defineStore('DeviceListStore', {
 
     // 👉 Delete Device
     deleteDevice(id) {
-      return new Promise((resolve, reject) => {
-        axios.delete(`http://localhost:8000/devices/${id}`).then(response => resolve(response)).catch(error => reject(error))
+      return new Promise(async (resolve, reject) => {
+        await axios.delete(`http://localhost:8000/devices/${id}`).then(response => resolve(response)).catch(error => reject(error))
       })
     },
   },
