@@ -1,6 +1,6 @@
 <script setup>
 import { bus } from '@/plugins/eventBus'
-import { currentDateYmd, getLastDateOfMonth, getWorkDaysInMonth, resolveLocalDateVariantMY, zerofill } from '@/plugins/helpers'
+import { currentDateYmd, getLastDateOfMonth, getWorkDaysInMonth, getFirstAndLastWorkDaysInMonth, resolveLocalDateVariantMY, zerofill } from '@/plugins/helpers'
 
 import { useCheckinStore } from '@/views/dashboards/checkins/useCheckinStore'
 import { ref } from 'vue'
@@ -9,12 +9,22 @@ const checkinStore = useCheckinStore()
 let lateData = ref()
 const lateDate = ref()
 const selectedDate = ref(currentDateYmd())
+const log = ref()
 
+const workDays = getFirstAndLastWorkDaysInMonth(selectedDate)
+
+
+// function fetchData(){
+//   checkinStore.fetchCheckin(selectedDate.value).then(response => {
+//     let late = response.data.late.late_occurence
+//     if(Array.isArray(late) && late.length > 0){ lateData.value = late }
+//     lateDate.value = response.data.late.late_date
+//   })
+// }
 function fetchData(){
-  checkinStore.fetchCheckin(selectedDate.value).then(response => {
-    let late = response.data.late.late_occurence
-    if(Array.isArray(late) && late.length > 0){ lateData.value = late }
-    lateDate.value = response.data.late.late_date
+  checkinStore.fetchCheckin('2023-05-01', '2023-05-30').then(response => {
+    log.value = response.data
+    
   })
 }
 
@@ -87,16 +97,16 @@ console.log(selectedDate.value)
       </div>
     </template>
 
-    <VCardText v-if="lateData">
+    <VCardText v-if="log">
       <VList class="card-list">
         <VListItem
-          v-for="(late, index) in lateData"
+          v-for="(late, index) in log"
           :key="late.positionId"
         >
           <template #prepend>
             <VAvatar
               variant="tonal"
-              :color="resolveLateCountStatus(late.monthLateCount)"
+              :color="secondary"
               size="34"
               rounded
             >
@@ -106,23 +116,23 @@ console.log(selectedDate.value)
 
           <VListItemTitle class="font-weight-medium">
             <RouterLink
-              :to="{ name: 'apps-user-view-id', params: { id: late.positionId } }"
+              :to="{ name: 'apps-user-view-id', params: { id: late.log_member_id} }"
               class="font-weight-medium user-list-name"
             >
-              {{ late.lastName }} {{ late.fisrtName }}
+              {{ late.log_member_name }} 
             </RouterLink>
           </VListItemTitle>
           <VListItemSubtitle class="opacity-100 text-disabled">
-            {{ getWorkDaysInMonth(lateDate) - late.monthLogCount }} absences
+            {{ getWorkDaysInMonth('2023-05-09') }} absences
           </VListItemSubtitle>
 
           <template #append>
             <div class="d-flex align-center">
               <VChip
                 label
-                :color="resolveLateCountStatus(late.monthLateCount)"
+                :color="resolveLateCountStatus(late.log_month_late_count)"
               >
-                {{ zerofill(late.monthLateCount) }}
+                {{ zerofill(late.log_month_late_count) }}
               </VChip>
             </div>
           </template>

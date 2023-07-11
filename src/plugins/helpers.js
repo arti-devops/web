@@ -2,6 +2,12 @@ export function readUserData(){
   return JSON.parse(localStorage.getItem("userData"))
 }
 
+export const currentDate = () => {
+  const date = new Date()
+  
+  return date.toLocaleDateString('fr-FR')
+}
+
 export function currentDateYmd(){
   // Create a new Date object for the current date
   const currentDate = new Date()
@@ -49,6 +55,30 @@ export function getWorkDaysInMonth(dateString) {
   }
   
   return workDays
+}
+
+export function getFirstAndLastWorkDaysInMonth(dateString) {
+  const date = new Date(dateString)
+  const month = date.getMonth()
+  const year = date.getFullYear()
+  const firstDayOfMonth = new Date(year, month, 1)
+  const lastDayOfMonth = new Date(year, month + 1, 0)
+
+  let firstWorkDay = new Date(firstDayOfMonth)
+  let lastWorkDay = new Date(lastDayOfMonth)
+
+  while (firstWorkDay.getDay() === 0 || firstWorkDay.getDay() === 6) {
+    firstWorkDay.setDate(firstWorkDay.getDate() + 1)
+  }
+
+  while (lastWorkDay.getDay() === 0 || lastWorkDay.getDay() === 6) {
+    lastWorkDay.setDate(lastWorkDay.getDate() - 1)
+  }
+
+  return {
+    firstWorkDay: firstWorkDay.toLocaleDateString(),
+    lastWorkDay: lastWorkDay.toLocaleDateString(),
+  }
 }
 
 export function zerofill(number) {

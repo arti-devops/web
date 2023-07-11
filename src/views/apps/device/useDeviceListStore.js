@@ -5,7 +5,7 @@ import { BASE_URL } from '@projectConfig'
 export const useDeviceListStore = defineStore('DeviceListStore', {
   actions: {
     // 👉 Fetch devices data
-    fetchDevices(params) { return axios.post(`${BASE_URL}/q`, {
+    fetchDevices(params) { return axios.post(`${BASE_URL}/devices/q`, {
       filter: params, 
     } ) },
 
@@ -22,21 +22,21 @@ export const useDeviceListStore = defineStore('DeviceListStore', {
     // 👉 Fetch single device
     fetchDevice(id) {
       return new Promise((resolve, reject) => {
-        axios.get(`${BASE_URL}/${id}`).then(response => resolve(response)).catch(error => reject(error))
+        axios.get(`${BASE_URL}/devices/${id}`).then(response => resolve(response)).catch(error => reject(error))
       })
     },
 
     // 👉 Update Device
     updateDevice(deviceData) {
       return new Promise(async (resolve, reject) => {
-        await axios.put(`${BASE_URL}/${deviceData.id}`, { device: deviceData.device }).then(response => resolve(response)).catch(error => reject(error))
+        await axios.put(`${BASE_URL}/devices/${deviceData.id}`, { device: deviceData.device }).then(response => resolve(response)).catch(error => reject(error))
       })
     },
 
     // 👉 Delete Device
     deleteDevice(id) {
       return new Promise(async (resolve, reject) => {
-        await axios.delete(`${BASE_URL}/${id}`).then(response => resolve(response)).catch(error => reject(error))
+        await axios.delete(`${BASE_URL}/devices/${id}`).then(response => resolve(response)).catch(error => reject(error))
       })
     },
   },

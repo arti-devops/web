@@ -1,10 +1,11 @@
 <script setup>
 import { bus } from '@/plugins/eventBus'
 
-import { currentDateYmd, fullTimeToHourMinuteFormatter, resolveLocalDateVariantLong, subStringNameForAvatar } from '@/plugins/helpers'
+import { currentDateYmd, fullTimeToHourMinuteFormatter, resolveLocalDateVariantLong } from '@/plugins/helpers'
 import { avatarText } from '@core/utils/formatters'
 
 import { useCheckinStore } from '@/views/dashboards/checkins/useCheckinStore'
+import { ref } from 'vue'
 
 const checkinStore = useCheckinStore()
 let checkinData = ref()
@@ -12,6 +13,7 @@ const logDate = ref()
 const lateCount = ref(0)
 const logCount = ref(0)
 const selectedDate = ref(currentDateYmd())
+const dlog = ref()
 
 function sortObjectsByCheckIn(array) {
   return array.sort((a, b) => {
@@ -31,7 +33,7 @@ function sortObjectsByCheckIn(array) {
 }
 
 function getFullName(checkin){
-  return checkin.lastName +" " + checkin.firstName
+  return checkin.log_member_name
 }
 
 function fetchData(){
@@ -49,6 +51,12 @@ function fetchData(){
     logDate.value = response.data.checkins.log_date
   })}
 
+function fetchDailyLog() {
+  checkinStore.fetchDailyLog('2023-05-09').then(response => {
+    dlog.value = response.data
+  })
+}
+
 function updateDate(){
   checkinData = ref()
   fetchData()
@@ -64,6 +72,8 @@ const optionActions = [
 ]
 
 fetchData()
+
+fetchDailyLog()
 
 function listenerAC(d) {
   selectedDate.value = d
@@ -110,44 +120,45 @@ console.log(selectedDate.value)
       </div>
     </template>
 
-    <VCardText v-if="checkinData">
+    <VCardText v-if="dlog">
       <VList class="card-list">
         <VListItem
-          v-for="checkin in checkinData"
-          :key="checkin.positionId"
+          v-for="logs in dlog"
+          :key="logs.log_member_id"
         >
           <template #prepend>
             <VAvatar
               rounded
               size="34"
-              :color="checkin.isLate ? 'error' : 'secondary'"
+              :color="secondary"
               variant="tonal"
             >
               <span class="font-weight-semibold">
-                {{ avatarText(subStringNameForAvatar(getFullName(checkin))) }}
+              
+                {{ avatarText('P A') }}
               </span>
             </VAvatar>
           </template>
 
           <VListItemTitle class="font-weight-medium">
             <RouterLink
-              :to="{ name: 'apps-user-view-id', params: { id: checkin.positionId } }"
+              :to="{ name: 'apps-user-view-id', params: { id: logs.log_member_id } }"
               class="font-weight-medium user-list-name"
             >
-              {{ getFullName(checkin) }}
+              {{ getFullName(logs) }}
             </RouterLink>
           </VListItemTitle>
           <VListItemSubtitle class="opacity-100 text-disabled">
-            1 pointage
+            {{ logs.log_count }} pointage(s)
           </VListItemSubtitle>
 
           <template #append>
             <div class="d-flex align-center">
-              <VChip
+              <VChip 
                 label
-                :color="checkin.isLate ? 'error' : 'secondary'"
+                :color="logs.log_time_islate ? 'error' : 'secondary'"
               >
-                {{ fullTimeToHourMinuteFormatter(checkin.checkIn) }}
+                {{ fullTimeToHourMinuteFormatter(logs.log_time) }}
               </VChip>
             </div>
           </template>
