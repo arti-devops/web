@@ -4,6 +4,10 @@ export default [
     icon: { icon: 'tabler-smart-home' },
     children: [
       {
+        title: 'Checkins',
+        to: 'dashboards-checkins',
+      },
+      {
         title: 'Analytics',
         to: 'dashboards-analytics',
       },
@@ -16,7 +20,7 @@ export default [
         to: 'dashboards-crm',
       },
     ],
-    badgeContent: '3',
+    badgeContent: '4',
     badgeClass: 'bg-primary',
   },
 ]

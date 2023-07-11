@@ -4,6 +4,11 @@ export default [
     icon: { icon: 'tabler-smart-home' },
     children: [
       {
+        title: 'Checkins',
+        to: 'dashboards-checkins',
+        icon: { icon: 'tabler-user-check' },
+      },
+      {
         title: 'Analytics',
         to: 'dashboards-analytics',
         icon: { icon: 'tabler-chart-pie-2' },

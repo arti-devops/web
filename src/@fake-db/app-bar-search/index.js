@@ -2,13 +2,13 @@
 import mock from '@/@fake-db/mock'
 
 const database = [
-  {
-    id: 1,
-    url: { name: 'dashboards-analytics' },
-    icon: 'tabler-timeline',
-    title: 'Analytics Dashboard',
-    category: 'dashboards',
-  },
+  // {
+  //   id: 1,
+  //   url: { name: 'dashboards-analytics' },
+  //   icon: 'tabler-timeline',
+  //   title: 'Analytics Dashboard',
+  //   category: 'dashboards',
+  // },
   {
     id: 2,
     url: { name: 'dashboards-ecommerce' },
@@ -631,6 +631,13 @@ const database = [
     icon: 'mdi-table',
     title: 'Simple Table',
     category: 'formsTables',
+  },
+  {
+    id: 92,
+    url: { name: 'dashboards-checkins' },
+    icon: 'tabler-checklist',
+    title: 'Checkins Dashboard',
+    category: 'dashboards',
   },
 ]
 
