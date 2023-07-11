@@ -89,11 +89,11 @@ const brands = [
 const status = [
   {
     title: 'Connecté',
-    value: 'connected',
+    value: 'ONLINE',
   },
   {
     title: 'Hors ligne',
-    value: 'offline',
+    value: 'OFFLINE',
   },
 ]
 
@@ -104,6 +104,11 @@ const resolveDeviceTypeVariant = dtype => {
       color: 'primary',
       icon: 'tabler-device-landline-phone',
     }
+  if (roleLowerCase === 'imprimante')
+    return {
+      color: '#8B1874',
+      icon: 'tabler-printer',
+    }
   
   return {
     color: 'primary',
@@ -113,7 +118,7 @@ const resolveDeviceTypeVariant = dtype => {
 
 const resolveStatusStatusVariant = stat => {
   const statLowerCase = stat.toLowerCase()
-  if (statLowerCase === 'connected')
+  if (statLowerCase === 'online')
     return 'success'
   if (statLowerCase === 'offline')
     return 'error'
