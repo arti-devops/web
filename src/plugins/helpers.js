@@ -109,3 +109,20 @@ export function resolveLocalDateVariantMY (d) {
   
   return date.toLocaleDateString('fr-FR', options)
 }
+
+export function sortObjectsByCheckIn(array) {
+  return array.sort((a, b) => {
+    // Convert checkIn time strings to total seconds
+    const timeA = a.checkIn.split(':').reduce((acc, val) => (acc * 60) + +val, 0)
+    const timeB = b.checkIn.split(':').reduce((acc, val) => (acc * 60) + +val, 0)
+
+    if (timeA > timeB) {
+      return -1
+    }
+    if (timeA < timeB) {
+      return 1
+    }
+    
+    return 0
+  })
+}

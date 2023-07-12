@@ -1,8 +1,7 @@
 <script setup>
 import CheckinsArrivalCard from '@/views/dashboards/checkins/CheckinsArrivalCard.vue'
-import CheckinsLateRankingCard from '@/views/dashboards/checkins/CheckinsLateRankingCard.vue'
 
-const date = ref('')
+//import CheckinsLateRankingCard from '@/views/dashboards/checkins/CheckinsLateRankingCard.vue'
 </script>
 
 <template>
@@ -17,13 +16,6 @@ const date = ref('')
     </VCol>
 
     <!-- 👉 Source Visits -->
-    <VCol
-      cols="12"
-      sm="6"
-      lg="6"
-    >
-      <CheckinsLateRankingCard />
-    </VCol>
   </VRow>
 </template>
 
