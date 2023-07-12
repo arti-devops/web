@@ -43,7 +43,7 @@ bus.on(listenerAC)
           :model-value="selectedDate"
           append-inner-icon="tabler-calendar"
           :config="{ dateFormat: 'Y-m-d', today: true}"
-          style="width: 157px;"
+          style="width: 147px;"
         />
       </div>
     </template>
