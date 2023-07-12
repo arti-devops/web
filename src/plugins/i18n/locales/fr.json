@@ -1,5 +1,6 @@
 {
   "Devices": "Equipements",
+  "Checkins": "Pointages",
   "UI Elements": "ÉLÉMENTS DE L'UI",
   "Forms & Tables": "Formulaires et tableaux",
   "Pages": "Des pages",
@@ -51,7 +52,7 @@
   "Level 3.2": "Niveau 3.2",
   "Raise Support": "Augmenter le soutien",
   "Documentation": "Documentation",
-  "Dashboards": "Tableaux de bord",
+  "Dashboards": "Liste des Etats",
   "Analytics": "Analytique",
   "Apps & Pages": "Applications et pages",
   "Email": "Email",

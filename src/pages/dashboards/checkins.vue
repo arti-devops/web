@@ -1,6 +1,8 @@
 <script setup>
 import CheckinsArrivalCard from '@/views/dashboards/checkins/CheckinsArrivalCard.vue'
 import CheckinsLateRankingCard from '@/views/dashboards/checkins/CheckinsLateRankingCard.vue'
+
+const date = ref('')
 </script>
 
 <template>
