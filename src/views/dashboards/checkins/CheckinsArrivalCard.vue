@@ -5,24 +5,23 @@ import { useCheckinStore } from '@/views/dashboards/checkins/useCheckinStore'
 import { avatarText } from '@core/utils/formatters'
 import { ref } from 'vue'
 
+const dlog = ref()
+const isLateCount = ref(0)
+const presenceCount = ref(0)
 const checkinStore = useCheckinStore()
 const selectedDate = ref(currentDateYmd())
-const dlog = ref()
 
 function fetchDailyLog() {
   checkinStore.fetchDailyLog('2023-05-09').then(response => {
     dlog.value = response.data
+    presenceCount.value = dlog.value.length
+    isLateCount.value = dlog.value.filter(obj => obj.log_time_islate === true).length
   })
-}
-
-function updateDate(){
-  checkinData = ref()
-  fetchData()
 }
 
 function listenerAC(d) {
   selectedDate.value = d
-  updateDate()
+  fetchDailyLog()
 }
 
 fetchDailyLog()
@@ -31,15 +30,19 @@ bus.on(listenerAC)
 
 <template>
   <VCard
-    :title="'Pointages du ' + selectedDate"
-    :subtitle="0 + ' retards sur ' + 0 + ' présences'"
+    title="Pointages"
+    :subtitle="isLateCount + ' retards sur ' + presenceCount + ' présences'"
   >
-    <template #append>
+    <template
+      v-if="selectedDate"
+      #append
+    >
       <div class="mt-n4 me-n2">
-        <AppDateTimePicker
+        <MyAppDateTimePicker
           v-model="selectedDate"
+          :model-value="selectedDate"
           append-inner-icon="tabler-calendar"
-          :config="{ dateFormat: 'd M Y',}"
+          :config="{ dateFormat: 'Y-m-d', today: true}"
           style="width: 157px;"
         />
       </div>

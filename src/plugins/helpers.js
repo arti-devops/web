@@ -34,6 +34,13 @@ export function resolveLocalDateVariantLong (d) {
   return date.toLocaleDateString('fr-FR', options)
 }
 
+export function resolveLocalDateVariantShort (d) {
+  const date = new Date(d)
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  
+  return date.toLocaleDateString('en-US', options)
+}
+
 export function subStringNameForAvatar (name) {
   let split = name.split(" ", 2)
   
