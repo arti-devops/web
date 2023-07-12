@@ -1,9 +1,12 @@
 export default [
   { heading: 'Apps & Pages' },
   {
-    title: 'Device',
+    title: 'Devices',
     icon: { icon: 'tabler-layout-list' },
-    to: 'apps-device-list',
+    children: [
+      { title: 'IP Phones', to: 'apps-device-list' },
+      { title: 'Printers', to: 'apps-device-list-printers' },
+    ],
   },
   {
     title: 'Email',
