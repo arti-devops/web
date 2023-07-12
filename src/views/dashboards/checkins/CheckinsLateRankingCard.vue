@@ -123,7 +123,7 @@ console.log(selectedDate.value)
             </RouterLink>
           </VListItemTitle>
           <VListItemSubtitle class="opacity-100 text-disabled">
-            {{ getWorkDaysInMonth('2023-05-09') }} absences
+            {{ late.log_month_absence_count }} absence(s)
           </VListItemSubtitle>
 
           <template #append>

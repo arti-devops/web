@@ -28,12 +28,12 @@ const options = ref({
 // Headers
 const headers = [
   {
-    title: 'Marque',
-    key: 'device_brand_name',
+    title: 'Imprimante',
+    key: 'device_name',
   },
   {
-    title: 'N Poste',
-    key: 'device_post_number',
+    title: 'Marque',
+    key: 'device_brand_name',
   },
   {
     title: 'Address IP',
@@ -57,7 +57,7 @@ const headers = [
 const fetchDevices = () => {
   deviceListStore.fetchDevices({
     q: searchQuery.value,
-    dtype: "TELEPHONE IP",
+    dtype: "IMPRIMANTE",
     status: selectedStatus.value,
     brand: selectedBrand.value,
     options: options.value,
@@ -73,12 +73,12 @@ watchEffect(fetchDevices)
 
 const brands = [
   {
-    title: 'Yealink',
-    value: 'yealink',
+    title: 'HP',
+    value: 'hp',
   },
   {
-    title: 'Grandstream',
-    value: 'grandstream',
+    title: 'Canon',
+    value: 'canon',
   },
 ]
 
@@ -156,7 +156,7 @@ const deleteDevice = async id => {
   <section>
     <VRow>
       <VCol cols="12">
-        <VCard title="Liste des TELEPHONES IP">
+        <VCard title="Liste des IMPRIMANTES">
           <!-- 👉 Filters -->
           <VCardText>
             <VRow>
@@ -232,7 +232,7 @@ const deleteDevice = async id => {
                 prepend-icon="tabler-plus"
                 @click="isAddNewUserDrawerVisible = true"
               >
-                Nouveau Tél. IP
+                Nouvel Impr.
               </VBtn>
             </div>
           </VCardText>
@@ -274,8 +274,8 @@ const deleteDevice = async id => {
               </div>
             </template>
 
-            <!-- 👉 Device Brand Name -->
-            <template #item.device_brand_name="{ item }">
+            <!-- 👉 Device Type -->
+            <template #item.device_type="{ item }">
               <div class="d-flex align-center gap-4">
                 <VAvatar
                   :size="30"
@@ -287,8 +287,30 @@ const deleteDevice = async id => {
                     :icon="resolveDeviceTypeVariant(item.raw.device_type).icon"
                   />
                 </VAvatar>
-                <span class="text-capitalize font-weight-medium">{{ item.raw.device_brand_name }}</span>
+                <span class="text-capitalize">{{ item.raw.device_type }}</span>
               </div>
+            </template>
+
+            <!-- 👉 Device Name -->
+            <template #item.device_name="{ item }">
+              <div class="d-flex align-center gap-4">
+                <VAvatar
+                  :size="30"
+                  :color="resolveDeviceTypeVariant(item.raw.device_type).color"
+                  variant="tonal"
+                >
+                  <VIcon
+                    :size="20"
+                    :icon="resolveDeviceTypeVariant(item.raw.device_type).icon"
+                  />
+                </VAvatar>
+                <span class="text-capitalize">{{ item.raw.device_name }}</span>
+              </div>
+            </template>
+
+            <!-- Device Brand -->
+            <template #item.device_brand_name="{ item }">
+              <span class="text-capitalize font-weight-medium">{{ item.raw.device_brand_name }}</span>
             </template>
 
             <!-- 👉 Status -->

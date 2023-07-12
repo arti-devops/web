@@ -1,7 +1,7 @@
 <script setup>
 import { bus } from '@/plugins/eventBus'
 
-import { currentDateYmd, fullTimeToHourMinuteFormatter, resolveLocalDateVariantLong } from '@/plugins/helpers'
+import { currentDateYmd, fullTimeToHourMinuteFormatter } from '@/plugins/helpers'
 import { avatarText } from '@core/utils/formatters'
 
 import { useCheckinStore } from '@/views/dashboards/checkins/useCheckinStore'
@@ -82,41 +82,24 @@ function listenerAC(d) {
 }
 bus.on(listenerAC)
 console.log(selectedDate.value)
+
+function printd(){ console.log(selectedDate)}
+watchEffect(printd)
 </script>
 
 <template>
   <VCard
-    title="Pointages"
+    :title="'Pointages du ' + selectedDate"
     :subtitle="lateCount + ' retards sur ' + logCount + ' présences'"
   >
     <template #append>
       <div class="mt-n4 me-n2">
-        <span class="text-sm text-disabled">{{ resolveLocalDateVariantLong(logDate) }}</span>
-
-        <VBtn
-          icon
-          color="default"
-          size="x-small"
-          variant="plain"
-        >
-          <VIcon
-            size="22"
-            icon="tabler-dots-vertical"
-          />
-
-          <VMenu activator="parent">
-            <VList>
-              <VListItem
-                v-for="(item, index) in optionActions"
-                :key="index"
-                :value="index"
-                @click="item.action"
-              >
-                <VListItemTitle>{{ item.title }}</VListItemTitle>
-              </VListItem>
-            </VList>
-          </VMenu>
-        </VBtn>
+        <AppDateTimePicker
+          v-model="selectedDate"
+          append-inner-icon="tabler-calendar"
+          :config="{ dateFormat: 'd M Y',}"
+          style="width: 157px;"
+        />
       </div>
     </template>
 
