@@ -28,10 +28,6 @@ const options = ref({
 // Headers
 const headers = [
   {
-    title: 'Type',
-    key: 'device_type',
-  },
-  {
     title: 'Marque',
     key: 'device_brand_name',
   },
@@ -61,9 +57,9 @@ const headers = [
 const fetchDevices = () => {
   deviceListStore.fetchDevices({
     q: searchQuery.value,
+    dtype: "TELEPHONE IP",
     status: selectedStatus.value,
     brand: selectedBrand.value,
-    status: selectedStatus.value,
     options: options.value,
   }).then( response => {
     devices.value = response.data.devices
@@ -160,7 +156,7 @@ const deleteDevice = async id => {
   <section>
     <VRow>
       <VCol cols="12">
-        <VCard title="Liste des téléphones IP">
+        <VCard title="Liste des TELEPHONES IP">
           <!-- 👉 Filters -->
           <VCardText>
             <VRow>
@@ -278,8 +274,8 @@ const deleteDevice = async id => {
               </div>
             </template>
 
-            <!-- 👉 Device Type -->
-            <template #item.device_type="{ item }">
+            <!-- 👉 Device Brand Name -->
+            <template #item.device_brand_name="{ item }">
               <div class="d-flex align-center gap-4">
                 <VAvatar
                   :size="30"
@@ -291,13 +287,8 @@ const deleteDevice = async id => {
                     :icon="resolveDeviceTypeVariant(item.raw.device_type).icon"
                   />
                 </VAvatar>
-                <span class="text-capitalize">{{ item.raw.device_type }}</span>
+                <span class="text-capitalize font-weight-medium">{{ item.raw.device_brand_name }}</span>
               </div>
-            </template>
-
-            <!-- Device Brand -->
-            <template #item.device_brand_name="{ item }">
-              <span class="text-capitalize font-weight-medium">{{ item.raw.device_brand_name }}</span>
             </template>
 
             <!-- 👉 Status -->
