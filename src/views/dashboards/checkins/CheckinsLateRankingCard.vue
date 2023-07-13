@@ -42,7 +42,6 @@ function listenerRC(d) {
     lastDateOfMonth.value = getLastDateOfMonth(d)
     updateData()
   }
-  console.log(`selectedDate: ${selectedDate.value}`)
 }
 
 fetchData()
@@ -56,7 +55,10 @@ bus.on(listenerRC)
   >
     <template #append>
       <div class="mt-n4 me-n2">
-        <span class="text-sm text-disabled capitalize-first-letter">Mois de {{ resolveLocalDateVariantMY(selectedDate.value) }}</span>
+        <span
+          v-if="selectedDate"
+          class="text-sm text-disabled capitalize-first-letter"
+        >Mois de {{ resolveLocalDateVariantMY(selectedDate) }}</span>
         <VBtn
           icon
           color="default"
