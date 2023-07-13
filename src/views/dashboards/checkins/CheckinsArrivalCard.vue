@@ -1,104 +1,51 @@
 <script setup>
 import { bus } from '@/plugins/eventBus'
-
 import { currentDateYmd, fullTimeToHourMinuteFormatter } from '@/plugins/helpers'
-import { avatarText } from '@core/utils/formatters'
-
 import { useCheckinStore } from '@/views/dashboards/checkins/useCheckinStore'
+import { avatarText } from '@core/utils/formatters'
 import { ref } from 'vue'
 
-const checkinStore = useCheckinStore()
-let checkinData = ref()
-const logDate = ref()
-const lateCount = ref(0)
-const logCount = ref(0)
-const selectedDate = ref(currentDateYmd())
 const dlog = ref()
-
-function sortObjectsByCheckIn(array) {
-  return array.sort((a, b) => {
-    // Convert checkIn time strings to total seconds
-    const timeA = a.checkIn.split(':').reduce((acc, val) => (acc * 60) + +val, 0)
-    const timeB = b.checkIn.split(':').reduce((acc, val) => (acc * 60) + +val, 0)
-
-    if (timeA > timeB) {
-      return -1
-    }
-    if (timeA < timeB) {
-      return 1
-    }
-    
-    return 0
-  })
-}
-
-function getFullName(checkin){
-  return checkin.log_member_name
-}
-
-function fetchData(){
-  checkinStore.fetchCheckin(selectedDate.value).then(response => {
-    let checkin = response.data.checkins.checkins.checkins
-    if(Array.isArray(checkin) && checkin.length > 0){
-      checkinData.value = sortObjectsByCheckIn(checkin)
-      let metaData = response.data.checkins.checkins.metadata
-      lateCount.value = metaData.late_count
-      logCount.value = metaData.log_count
-    }else{
-      lateCount.value = 0
-      logCount.value = 0
-    }
-    logDate.value = response.data.checkins.log_date
-  })}
+const isLateCount = ref(0)
+const presenceCount = ref(0)
+const checkinStore = useCheckinStore()
+const selectedDate = ref(currentDateYmd())
 
 function fetchDailyLog() {
-  checkinStore.fetchDailyLog('2023-05-09').then(response => {
-    dlog.value = response.data
-  })
+  checkinStore.fetchDailyLog(selectedDate.value)
+    .then(response => {
+      dlog.value = response.data
+      presenceCount.value = dlog.value.length
+      isLateCount.value = dlog.value.filter(obj => obj.log_time_islate === true).length
+    })
 }
 
-function updateDate(){
-  checkinData = ref()
-  fetchData()
+function updateData() {
+  fetchDailyLog()
+  bus.emit(selectedDate.value)
 }
-  
-const optionActions = [
-  { title: "Actualiser",
-    action: updateDate, 
-  },
-  { title: "Télécharger",
-    action: null, 
-  },
-]
-
-fetchData()
 
 fetchDailyLog()
-
-function listenerAC(d) {
-  selectedDate.value = d
-  updateDate()
-  console.log(`selectedDate: ${selectedDate.value}`)
-}
-bus.on(listenerAC)
-console.log(selectedDate.value)
-
-function printd(){ console.log(selectedDate)}
-watchEffect(printd)
+bus.emit(selectedDate.value)
 </script>
 
 <template>
   <VCard
-    :title="'Pointages du ' + selectedDate"
-    :subtitle="lateCount + ' retards sur ' + logCount + ' présences'"
+    title="Pointages"
+    :subtitle="isLateCount + ' retards sur ' + presenceCount + ' présences'"
   >
-    <template #append>
+    <template
+      v-if="selectedDate"
+      #append
+    >
       <div class="mt-n4 me-n2">
-        <AppDateTimePicker
+        <MyAppDateTimePicker
           v-model="selectedDate"
+          :model-value="selectedDate"
           append-inner-icon="tabler-calendar"
-          :config="{ dateFormat: 'd M Y',}"
-          style="width: 157px;"
+          :config="{ dateFormat: 'Y-m-d', today: true}"
+          style="width: 147px;"
+          @input="updateData"
         />
       </div>
     </template>
@@ -113,7 +60,7 @@ watchEffect(printd)
             <VAvatar
               rounded
               size="34"
-              :color="secondary"
+              color="secondary"
               variant="tonal"
             >
               <span class="font-weight-semibold">
@@ -128,7 +75,7 @@ watchEffect(printd)
               :to="{ name: 'apps-user-view-id', params: { id: logs.log_member_id } }"
               class="font-weight-medium user-list-name"
             >
-              {{ getFullName(logs) }}
+              {{ logs.log_member_name }}
             </RouterLink>
           </VListItemTitle>
           <VListItemSubtitle class="opacity-100 text-disabled">

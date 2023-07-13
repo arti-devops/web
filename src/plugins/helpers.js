@@ -34,6 +34,13 @@ export function resolveLocalDateVariantLong (d) {
   return date.toLocaleDateString('fr-FR', options)
 }
 
+export function resolveLocalDateVariantShort (d) {
+  const date = new Date(d)
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  
+  return date.toLocaleDateString('en-US', options)
+}
+
 export function subStringNameForAvatar (name) {
   let split = name.split(" ", 2)
   
@@ -85,6 +92,13 @@ export function zerofill(number) {
   return number.toString().padStart(2, '0')
 }
 
+export function getFirstDateOfMonth(datestring){
+  var givenDate = new Date(datestring)
+  var firstDateOfMonth = new Date(givenDate.getFullYear(), givenDate.getMonth(), 1)
+  
+  return firstDateOfMonth.toISOString().split('T')[0]
+}
+
 export function getLastDateOfMonth(datestring){
   // Create a new Date object for the current date
   const currentDate = new Date(datestring)
@@ -108,4 +122,21 @@ export function resolveLocalDateVariantMY (d) {
   const options = { year: 'numeric', month: 'long' }
   
   return date.toLocaleDateString('fr-FR', options)
+}
+
+export function sortObjectsByCheckIn(array) {
+  return array.sort((a, b) => {
+    // Convert checkIn time strings to total seconds
+    const timeA = a.checkIn.split(':').reduce((acc, val) => (acc * 60) + +val, 0)
+    const timeB = b.checkIn.split(':').reduce((acc, val) => (acc * 60) + +val, 0)
+
+    if (timeA > timeB) {
+      return -1
+    }
+    if (timeA < timeB) {
+      return 1
+    }
+    
+    return 0
+  })
 }
