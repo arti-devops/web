@@ -1,44 +1,14 @@
 <script setup>
 import { bus } from '@/plugins/eventBus'
-import { currentDateYmd, getLastDateOfMonth, getWorkDaysInMonth, getFirstAndLastWorkDaysInMonth, resolveLocalDateVariantMY, zerofill } from '@/plugins/helpers'
-
+import { currentDateYmd, getFirstDateOfMonth, getLastDateOfMonth, resolveLocalDateVariantMY, zerofill } from '@/plugins/helpers'
 import { useCheckinStore } from '@/views/dashboards/checkins/useCheckinStore'
 import { ref } from 'vue'
 
-const checkinStore = useCheckinStore()
-let lateData = ref()
-const lateDate = ref()
-const selectedDate = ref(currentDateYmd())
+
 const log = ref()
-
-const workDays = getFirstAndLastWorkDaysInMonth(selectedDate)
-
-
-// function fetchData(){
-//   checkinStore.fetchCheckin(selectedDate.value).then(response => {
-//     let late = response.data.late.late_occurence
-//     if(Array.isArray(late) && late.length > 0){ lateData.value = late }
-//     lateDate.value = response.data.late.late_date
-//   })
-// }
-function fetchData(){
-  checkinStore.fetchCheckin('2023-05-01', '2023-05-30').then(response => {
-    log.value = response.data
-    
-  })
-}
-
-function resolveLateCountStatus(c) {
-  if (c > 4) return "error"
-  if (c > 0 && c <= 4) return "warning"
-  
-  return "secondary"
-}
-
-function updateData(){
-  lateData.value = null
-  fetchData()
-}
+const checkinStore = useCheckinStore()
+const selectedDate = ref(currentDateYmd())
+const lastDateOfMonth = ref(currentDateYmd())
 
 const optionActions = [
   { title: "Actualiser",
@@ -49,17 +19,34 @@ const optionActions = [
   },
 ]
 
-fetchData()
+function fetchData(){
+  checkinStore.fetchCheckin(getFirstDateOfMonth(selectedDate.value), getLastDateOfMonth(selectedDate.value))
+    .then(response => {log.value = response.data})
+}
+
+function resolveLateCountStatus(c) {
+  if (c > 4) return "error"
+  if (c > 0 && c <= 4) return "warning"
+  
+  return "secondary"
+}
+
+function updateData(){
+  log.value = null
+  fetchData()
+}
 
 function listenerRC(d) {
-  if(getLastDateOfMonth(d) != lateDate.value){
+  if(getLastDateOfMonth(d) != lastDateOfMonth.value){
     selectedDate.value = d
+    lastDateOfMonth.value = getLastDateOfMonth(d)
     updateData()
   }
   console.log(`selectedDate: ${selectedDate.value}`)
 }
+
+fetchData()
 bus.on(listenerRC)
-console.log(selectedDate.value)
 </script>
 
 <template>
@@ -69,7 +56,7 @@ console.log(selectedDate.value)
   >
     <template #append>
       <div class="mt-n4 me-n2">
-        <span class="text-sm text-disabled capitalize-first-letter">Mois de {{ resolveLocalDateVariantMY(lateDate) }}</span>
+        <span class="text-sm text-disabled capitalize-first-letter">Mois de {{ resolveLocalDateVariantMY(selectedDate.value) }}</span>
         <VBtn
           icon
           color="default"
@@ -101,12 +88,12 @@ console.log(selectedDate.value)
       <VList class="card-list">
         <VListItem
           v-for="(late, index) in log"
-          :key="late.positionId"
+          :key="late.log_member_id"
         >
           <template #prepend>
             <VAvatar
               variant="tonal"
-              :color="secondary"
+              color="secondary"
               size="34"
               rounded
             >

@@ -92,6 +92,13 @@ export function zerofill(number) {
   return number.toString().padStart(2, '0')
 }
 
+export function getFirstDateOfMonth(datestring){
+  var givenDate = new Date(datestring)
+  var firstDateOfMonth = new Date(givenDate.getFullYear(), givenDate.getMonth(), 1)
+  
+  return firstDateOfMonth.toISOString().split('T')[0]
+}
+
 export function getLastDateOfMonth(datestring){
   // Create a new Date object for the current date
   const currentDate = new Date(datestring)

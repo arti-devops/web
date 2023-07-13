@@ -1,7 +1,6 @@
 <script setup>
 import CheckinsArrivalCard from '@/views/dashboards/checkins/CheckinsArrivalCard.vue'
-
-//import CheckinsLateRankingCard from '@/views/dashboards/checkins/CheckinsLateRankingCard.vue'
+import CheckinsLateRankingCard from '@/views/dashboards/checkins/CheckinsLateRankingCard.vue'
 </script>
 
 <template>
@@ -13,6 +12,13 @@ import CheckinsArrivalCard from '@/views/dashboards/checkins/CheckinsArrivalCard
       lg="6"
     >
       <CheckinsArrivalCard />
+    </VCol>
+    <VCol
+      cols="12"
+      sm="6"
+      lg="6"
+    >
+      <CheckinsLateRankingCard />
     </VCol>
 
     <!-- 👉 Source Visits -->

@@ -1,4 +1,5 @@
 <script setup>
+import { bus } from '@/plugins/eventBus'
 import { currentDateYmd, fullTimeToHourMinuteFormatter } from '@/plugins/helpers'
 import { useCheckinStore } from '@/views/dashboards/checkins/useCheckinStore'
 import { avatarText } from '@core/utils/formatters'
@@ -11,14 +12,21 @@ const checkinStore = useCheckinStore()
 const selectedDate = ref(currentDateYmd())
 
 function fetchDailyLog() {
-  checkinStore.fetchDailyLog(selectedDate.value).then(response => {
-    dlog.value = response.data
-    presenceCount.value = dlog.value.length
-    isLateCount.value = dlog.value.filter(obj => obj.log_time_islate === true).length
-  })
+  checkinStore.fetchDailyLog(selectedDate.value)
+    .then(response => {
+      dlog.value = response.data
+      presenceCount.value = dlog.value.length
+      isLateCount.value = dlog.value.filter(obj => obj.log_time_islate === true).length
+    })
+}
+
+function updateData() {
+  fetchDailyLog()
+  bus.emit(selectedDate.value)
 }
 
 fetchDailyLog()
+bus.emit(selectedDate.value)
 </script>
 
 <template>
@@ -37,7 +45,7 @@ fetchDailyLog()
           append-inner-icon="tabler-calendar"
           :config="{ dateFormat: 'Y-m-d', today: true}"
           style="width: 147px;"
-          @input="fetchDailyLog"
+          @input="updateData"
         />
       </div>
     </template>
