@@ -36,9 +36,9 @@ export function resolveLocalDateVariantLong (d) {
 
 export function resolveLocalDateVariantShort (d) {
   const date = new Date(d)
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  const options = { year: 'numeric', month: 'short', day: '2-digit' }
   
-  return date.toLocaleDateString('en-US', options)
+  return date.toLocaleDateString('fr-FR', options)
 }
 
 export function subStringNameForAvatar (name) {
@@ -139,4 +139,8 @@ export function sortObjectsByCheckIn(array) {
     
     return 0
   })
+}
+
+export function resolveXOFCurrencyFormat(xof){
+  return xof.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF' })
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { paginationMeta } from '@/@fake-db/utils'
-import { resolveLocalDateVariantShort } from '@/plugins/helpers'
+import { resolveLocalDateVariantShort, resolveXOFCurrencyFormat } from '@/plugins/helpers'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
@@ -36,6 +36,9 @@ const add_new_menu_items = [
 ]
 
 const headers = [
+  { title: '', 
+    key: 'data-table-expand',
+  },
   {
     title: 'Projet',
     key: 'project_title',
@@ -51,6 +54,10 @@ const headers = [
   {
     title: 'Fin',
     key: 'project_end_date',
+  },
+  {
+    title: 'Budget',
+    key: 'project_budget',
   },
   {
     title: 'Status',
@@ -167,37 +174,6 @@ watchEffect(queryProjects)
       <VCol cols="12">
         <VCard title="Liste des PROJETS">
           <!-- 👉 Filters -->
-          <VCardText>
-            <VRow>
-              <!-- 👉 Select Brand -->
-              <VCol
-                cols="12"
-                sm="4"
-              >
-                <AppSelect
-                  v-model="selectedDirname"
-                  label="Filtrer par Direction"
-                  :items="directions"
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-              <!-- 👉 Select Status -->
-              <VCol
-                cols="12"
-                sm="4"
-              >
-                <AppSelect
-                  v-model="selectedStatus"
-                  label="Filtrer par Status"
-                  :items="status"
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-            </VRow>
-          </VCardText>
-
           <VDivider />
 
           <VCardText class="d-flex flex-wrap py-4 gap-4">
@@ -212,6 +188,24 @@ watchEffect(queryProjects)
                 ]"
                 style="width: 6.25rem;"
                 @update:model-value="options.itemsPerPage = parseInt($event, 10)"
+              />
+              
+              <!-- 👉 Filter By Direction Name  -->
+              <AppSelect
+                v-model="selectedDirname"
+                :items="directions"
+                clearable
+                clear-icon="tabler-x"
+                model-value="Directions"
+              />
+                
+              <!-- 👉 Filter By Direction Status  -->
+              <AppSelect
+                v-model="selectedStatus"
+                :items="status"
+                clearable
+                clear-icon="tabler-x"
+                model-value="Status"
               />
             </div>
             <VSpacer />
@@ -237,16 +231,12 @@ watchEffect(queryProjects)
               </VBtn>
 
               <!-- 👉 Add Project button -->
-              <VMenu>
-                <template #activator="{ props }">
-                  <VBtn v-bind="props">
-                    <VIcon icon="tabler-plus" />
-                    Ajouter
-                  </VBtn>
-                </template>
-
-                <VList :items="add_new_menu_items" />
-              </VMenu>
+              <VBtn
+                prepend-icon="tabler-text-plus"
+                @click="isAddNewUserDrawerVisible = true"
+              >
+                Nouveau Projet
+              </VBtn>
             </div>
           </VCardText>
 
@@ -260,8 +250,19 @@ watchEffect(queryProjects)
             :items-length="totalProjects"
             :headers="headers"
             class="text-no-wrap"
+            expand-on-click
             @update:options="options = $event"
           >
+            <template #expanded-row="slotProps">
+              <tr class="v-data-table__tr">
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Description: {{ slotProps.item.raw.project_description }}
+                  </p>
+                </td>
+              </tr>
+            </template>
+
             <!-- 👉 Status -->
             <template #item.project_status="{ item }">
               <VAvatar
@@ -287,20 +288,15 @@ watchEffect(queryProjects)
               </span>
             </template>
 
+            <!-- 👉 Project Budget -->
+            <template #item.project_budget="{ item }">
+              <span style=" font-weight: lighter;text-align: end;">
+                {{ resolveXOFCurrencyFormat(item.raw.project_budget) }}
+              </span>
+            </template>
+
             <!-- Actions -->
             <template #item.actions="{ item }">
-              <IconBtn
-                disabled
-                :to="{ name: 'apps-user-view-id', params: { id: item.raw.project_id } }"
-              >
-                <VIcon icon="tabler-file-arrow-right" />
-              </IconBtn>
-              <IconBtn>
-                <VIcon
-                  icon="tabler-edit"
-                  @click="updateProjectTrigger(item.raw.project_id)"
-                />
-              </IconBtn>
               <VBtn
                 icon
                 variant="text"
@@ -314,6 +310,15 @@ watchEffect(queryProjects)
 
                 <VMenu activator="parent">
                   <VList>
+                    <VListItem>
+                      <template #prepend>
+                        <VIcon icon="tabler-subtask" />
+                      </template>
+                      <VListItemTitle>Nouvelle Tâche</VListItemTitle>
+                    </VListItem>
+
+                    <VDivider />
+                    
                     <VListItem
                       disabled
                       :to="{ name: 'apps-user-view-id', params: { id: item.raw.project_id } }"
@@ -322,21 +327,21 @@ watchEffect(queryProjects)
                         <VIcon icon="tabler-file-arrow-right" />
                       </template>
 
-                      <VListItemTitle>View</VListItemTitle>
+                      <VListItemTitle>Voir</VListItemTitle>
                     </VListItem>
 
                     <VListItem @click="updateProjectTrigger(item.raw.project_id)">
                       <template #prepend>
                         <VIcon icon="tabler-edit" />
                       </template>
-                      <VListItemTitle>Edit</VListItemTitle>
+                      <VListItemTitle>Modifier</VListItemTitle>
                     </VListItem>
 
                     <VListItem @click="deleteProject(item.raw.project_id)">
                       <template #prepend>
                         <VIcon icon="tabler-trash" />
                       </template>
-                      <VListItemTitle>Delete</VListItemTitle>
+                      <VListItemTitle>Supprimer</VListItemTitle>
                     </VListItem>
                   </VList>
                 </VMenu>
