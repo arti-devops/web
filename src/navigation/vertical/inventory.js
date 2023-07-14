@@ -1,11 +1,11 @@
 export default [
-  { heading: 'Devices Inventory' },
+  { heading: 'Inventaires' },
   {
     title: 'Devices',
     icon: { icon: 'tabler-layout-list' },
     children: [
-      { title: 'IP Phones', to: 'apps-device-list' },
-      { title: 'Printers', to: 'apps-device-list-printers' },
+      { title: 'Téléphones', to: 'apps-device-list' },
+      { title: 'Imprimantes', to: 'apps-device-list-printers' },
     ],
   },
 ]
