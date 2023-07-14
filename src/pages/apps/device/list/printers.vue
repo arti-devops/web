@@ -157,38 +157,6 @@ const deleteDevice = async id => {
     <VRow>
       <VCol cols="12">
         <VCard title="Liste des IMPRIMANTES">
-          <!-- 👉 Filters -->
-          <VCardText>
-            <VRow>
-              <!-- 👉 Select Brand -->
-              <VCol
-                cols="12"
-                sm="4"
-              >
-                <AppSelect
-                  v-model="selectedBrand"
-                  label="Filtrer par Marque"
-                  :items="brands"
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-              <!-- 👉 Select Status -->
-              <VCol
-                cols="12"
-                sm="4"
-              >
-                <AppSelect
-                  v-model="selectedStatus"
-                  label="Filtrer par Status"
-                  :items="status"
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-            </VRow>
-          </VCardText>
-
           <VDivider />
 
           <VCardText class="d-flex flex-wrap py-4 gap-4">
@@ -203,6 +171,24 @@ const deleteDevice = async id => {
                 ]"
                 style="width: 6.25rem;"
                 @update:model-value="options.itemsPerPage = parseInt($event, 10)"
+              />
+
+              <!-- 👉 Select Brand -->
+              <AppSelect
+                v-model="selectedBrand"
+                :items="brands"
+                model-value="Marque"
+                clearable
+                clear-icon="tabler-x"
+              />
+
+              <!-- 👉 Select Status -->
+              <AppSelect
+                v-model="selectedStatus"
+                :items="status"
+                model-value="Status"
+                clearable
+                clear-icon="tabler-x"
               />
             </div>
             <VSpacer />
@@ -229,10 +215,10 @@ const deleteDevice = async id => {
 
               <!-- 👉 Add user button -->
               <VBtn
-                prepend-icon="tabler-plus"
+                prepend-icon="tabler-square-rounded-plus-filled"
                 @click="isAddNewUserDrawerVisible = true"
               >
-                Nouvel Impr.
+                Imprimante
               </VBtn>
             </div>
           </VCardText>

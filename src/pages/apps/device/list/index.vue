@@ -158,41 +158,12 @@ const deleteDevice = async id => {
       <VCol cols="12">
         <VCard title="Liste des TELEPHONES IP">
           <!-- 👉 Filters -->
-          <VCardText>
-            <VRow>
-              <!-- 👉 Select Brand -->
-              <VCol
-                cols="12"
-                sm="4"
-              >
-                <AppSelect
-                  v-model="selectedBrand"
-                  label="Filtrer par Marque"
-                  :items="brands"
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-              <!-- 👉 Select Status -->
-              <VCol
-                cols="12"
-                sm="4"
-              >
-                <AppSelect
-                  v-model="selectedStatus"
-                  label="Filtrer par Status"
-                  :items="status"
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-            </VRow>
-          </VCardText>
 
           <VDivider />
 
           <VCardText class="d-flex flex-wrap py-4 gap-4">
             <div class="me-3 d-flex gap-3">
+              <!-- 👉 Select Display Size  -->
               <AppSelect
                 :model-value="options.itemsPerPage"
                 :items="[
@@ -205,6 +176,24 @@ const deleteDevice = async id => {
                 @update:model-value="options.itemsPerPage = parseInt($event, 10)"
               />
             </div>
+            
+            <!-- 👉 Select Brand -->
+            <AppSelect
+              v-model="selectedBrand"
+              :items="brands"
+              model-value="Marque"
+              clearable
+              clear-icon="tabler-x"
+            />
+
+            <!-- 👉 Select Status -->
+            <AppSelect
+              v-model="selectedStatus"
+              :items="status"
+              model-value="Status"
+              clearable
+              clear-icon="tabler-x"
+            />
             <VSpacer />
 
             <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
