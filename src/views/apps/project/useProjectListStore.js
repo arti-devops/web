@@ -15,8 +15,8 @@ export const useProjectListStore = defineStore('ProjectListStore', {
     // 👉 Add New Project
     addProject(projectData) {
       return new Promise((resolve, reject) => {
-        axios.post(BASE_URL, {
-          Project: ProjectData,
+        axios.post(`${BASE_URL}/projects`, {
+          project: projectData,
         }).then(response => resolve(response))
           .catch(error => reject(error))
       })
@@ -32,7 +32,7 @@ export const useProjectListStore = defineStore('ProjectListStore', {
     // 👉 Update Project
     updateProject(projectData) {
       return new Promise(async (resolve, reject) => {
-        await axios.put(`${BASE_URL}/projects/${ProjectData.id}`, { Project: ProjectData.Project }).then(response => resolve(response)).catch(error => reject(error))
+        await axios.put(`${BASE_URL}/projects/${projectData.id}`, { project: projectData.project }).then(response => resolve(response)).catch(error => reject(error))
       })
     },
 

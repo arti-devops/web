@@ -142,5 +142,9 @@ export function sortObjectsByCheckIn(array) {
 }
 
 export function resolveXOFCurrencyFormat(xof){
-  return xof.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF' })
+  try {
+    return xof.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF' })
+  } catch (error) {
+    console.log(error.String)
+  }
 }

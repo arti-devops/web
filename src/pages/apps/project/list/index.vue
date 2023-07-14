@@ -1,6 +1,8 @@
 <script setup>
 import { paginationMeta } from '@/@fake-db/utils'
 import { resolveLocalDateVariantShort, resolveXOFCurrencyFormat } from '@/plugins/helpers'
+import AddNewProjectDrawer from '@/views/apps/project/list/AddNewProjectDrawer.vue'
+import UpdateProjectDrawer from '@/views/apps/project/list/UpdateProjectDrawer.vue'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
@@ -10,9 +12,6 @@ const projectListStore = useProjectListStore()
 const projects = ref([])
 const totalProjects =ref(0)
 const projectToUpdate = ref({})
-
-const isUpdateDrawerVisible = ref(false)
-const isAddNewUserDrawerVisible = ref(false)
 
 // Filter Variables
 const totalPage = ref(1)
@@ -29,11 +28,6 @@ const options = ref({
 })
 
 // Table Headers
-
-const add_new_menu_items = [
-  { title: 'Projet', value: 'Option 1' }, 
-  { title: 'Activité', value: 'Option 2' },
-]
 
 const headers = [
   { title: '', 
@@ -138,10 +132,17 @@ const resolveStatusStatusVariant = stat => {
     return { "color": "primary", "status_name": "En attente" }
 }
 
+// CRUD Functions
+
+const isUpdateDrawerVisible = ref(false)
+const isAddNewProjectDrawerVisible = ref(false)
+
 // Add and refetch Project
 const addNewProject = async projectData => {
+  console.log(projectData)
+
   await projectListStore.addProject(projectData)
-  fetchProjects()
+  queryProjects()
 }
 
 // Updqte and refresh Project
@@ -155,12 +156,13 @@ const updateProjectTrigger = projectId => {
 
 const updateProject = async projectData => {
   await projectListStore.updateProject(projectData)
-  fetchProjects()
+
+  //fetchProjects()
 }
 
 // Delete and refetch Project
 const deleteProject = async id => {
-  await projectListStore.deleteProject(id)
+  //await projectListStore.deleteProject(id)
   fetchProjects()
 }
 
@@ -233,7 +235,7 @@ watchEffect(queryProjects)
               <!-- 👉 Add Project button -->
               <VBtn
                 prepend-icon="tabler-text-plus"
-                @click="isAddNewUserDrawerVisible = true"
+                @click="isAddNewProjectDrawerVisible = true"
               >
                 Nouveau Projet
               </VBtn>
@@ -261,6 +263,23 @@ watchEffect(queryProjects)
                   </p>
                 </td>
               </tr>
+            </template>
+
+            <!-- 👉 Project Title -->
+            <template #item.project_title="{ item }">
+              <div class="d-flex align-center gap-4">
+                <VAvatar
+                  size="30"
+                  color="primary"
+                  variant="tonal"
+                >
+                  <VIcon
+                    size="20"
+                    icon="tabler-archive"
+                  />
+                </VAvatar>
+                <span class="text-capitalize font-weight-medium">{{ item.raw.project_title }}</span>
+              </div>
             </template>
 
             <!-- 👉 Status -->
@@ -390,6 +409,15 @@ watchEffect(queryProjects)
         </VCard>
 
         <!-- 👉 Place of the Drawers -->
+        <AddNewProjectDrawer
+          v-model:isDrawerOpen="isAddNewProjectDrawerVisible"
+          @project-data="addNewProject"
+        />
+        <UpdateProjectDrawer
+          v-model:isDrawerOpen="isUpdateDrawerVisible"
+          :project-to-update="projectToUpdate"
+          @project-data="updateProject"
+        />
       </vcol>
     </vrow>
   </section>
