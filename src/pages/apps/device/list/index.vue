@@ -218,10 +218,10 @@ const deleteDevice = async id => {
 
               <!-- 👉 Add user button -->
               <VBtn
-                prepend-icon="tabler-plus"
+                prepend-icon="tabler-square-rounded-plus-filled"
                 @click="isAddNewUserDrawerVisible = true"
               >
-                Nouveau Tél. IP
+                Téléphone
               </VBtn>
             </div>
           </VCardText>
