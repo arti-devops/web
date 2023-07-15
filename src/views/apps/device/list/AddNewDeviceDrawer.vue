@@ -24,7 +24,7 @@ const deviceBrandName = ref('Yealink')
 const deviceBrandModel = ref('T33G')
 const devicePostNumber = ref('711')
 const deviceIPAddress = ref("192.168.0.220")
-const deviceStatus = ref("offline")
+const deviceStatus = ref("OFFLINE")
 const deviceSerialNumber = ref("VNC0015KL")
 
 // 👉 drawer close
@@ -159,7 +159,7 @@ const handleDrawerModelValueUpdate = val => {
                   v-model="deviceStatus"
                   label="Status actuel"
                   :rules="[requiredValidator]"
-                  :items="[{ title: 'Hors ligne', value: 'offline' },{ title: 'En line', value: 'connected' }, ]"
+                  :items="[{ title: 'En line', value: 'ONLINE' },{ title: 'Hors ligne', value: 'OFFLINE' },]"
                 />
               </VCol>
 

@@ -84,7 +84,7 @@ const brands = [
 
 const status = [
   {
-    title: 'Connecté',
+    title: 'En ligne',
     value: 'ONLINE',
   },
   {
@@ -112,14 +112,14 @@ const resolveDeviceTypeVariant = dtype => {
   }
 }
 
-const resolveStatusStatusVariant = stat => {
+const resolveDeviceStatusVariant = stat => {
   const statLowerCase = stat.toLowerCase()
   if (statLowerCase === 'online')
-    return 'success'
+    return { status: 'En ligne', color: 'success' }
   if (statLowerCase === 'offline')
-    return 'error'
-  
-  return 'primary'
+    return { status: 'Hors ligne', color: 'error' }
+    
+  return { status: 'Status inconnu', color: 'secondary' }
 }
 
 const isAddNewUserDrawerVisible = ref(false)
@@ -156,7 +156,7 @@ const deleteDevice = async id => {
   <section>
     <VRow>
       <VCol cols="12">
-        <VCard title="Liste des TELEPHONES IP">
+        <VCard title="Liste des TELEPHONES">
           <!-- 👉 Filters -->
 
           <VDivider />
@@ -283,12 +283,12 @@ const deleteDevice = async id => {
             <!-- 👉 Status -->
             <template #item.device_status="{ item }">
               <VChip
-                :color="resolveStatusStatusVariant(item.raw.device_status)"
+                :color="resolveDeviceStatusVariant(item.raw.device_status).color"
                 size="small"
                 label
                 class="text-capitalize"
               >
-                {{ item.raw.device_status }}
+                {{ resolveDeviceStatusVariant(item.raw.device_status).status }}
               </VChip>
             </template>
 

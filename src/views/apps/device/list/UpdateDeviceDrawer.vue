@@ -51,7 +51,7 @@ const onSubmit = () => {
           device_type: deviceType.value,
           device_brand_name: deviceBrandName.value,
           device_brand_model: deviceBrandModel.value,
-          device_post_number: devicePostNumber.value,
+          device_post_number: String(devicePostNumber.value),
           device_ip_address: deviceIPAddress.value,
           device_status: deviceStatus.value,
           device_serial_number: deviceSerialNumber.value,
@@ -70,9 +70,16 @@ const handleDrawerModelValueUpdate = val => {
 }
 
 const resolveDeviceStatusString = stat => {
-  if(stat === "connected") return 'En ligne'
-  
-  return 'Hors ligne'
+  try {
+    const status = stat.toLowerCase()
+    if(status === "online") return 'En ligne'
+    if(status === "offline") return 'Hors ligne'
+    
+    return 'Statut inconnu'
+    
+  } catch (error) {
+    //console.log(error)
+  }
 }
 
 const fillVaiables = () => {
@@ -83,7 +90,7 @@ const fillVaiables = () => {
   devicePostNumber.value = props.deviceToUpdate.device_post_number
   deviceIPAddress.value = props.deviceToUpdate.device_ip_address
   deviceUser.value = props.deviceToUpdate.device_user
-  deviceStatus.value = props.deviceToUpdate.device_status
+  deviceStatus.value = resolveDeviceStatusString(props.deviceToUpdate.device_status)
 }
 
 watchEffect(fillVaiables)
@@ -100,7 +107,7 @@ watchEffect(fillVaiables)
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Modification Tél. IP"
+      title="Mise à jour Téléphone"
       @cancel="closeNavigationDrawer"
     />
 
@@ -114,50 +121,21 @@ watchEffect(fillVaiables)
             @submit.prevent="onSubmit"
           >
             <VRow>
-              <!-- 👉 Device Serial Number -->
+              <!-- 👉 Device User -->
               <VCol cols="12">
                 <AppTextField
-                  v-model="deviceSerialNumber"
+                  v-model="deviceUser"
+                  label="Bénéficaire"
                   :rules="[requiredValidator]"
-                  label="Numéro de série"
                 />
               </VCol>
-
-              <!-- 👉 Device Type -->
-              <VCol cols="12">
-                <AppSelect
-                  v-model="deviceType"
-                  :rules="[requiredValidator]"
-                  label="Type de l'équipement"
-                  :items="['TELEPHONE IP']"
-                />
-              </VCol>
-
-              <!-- 👉 Device Brand Name -->
-              <VCol cols="12">
-                <AppSelect
-                  v-model="deviceBrandName"
-                  :rules="[requiredValidator]"
-                  label="Marque"
-                  :items="['Yealink','Grandstream']"
-                />
-              </VCol>
-
-              <!-- 👉 Model -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="deviceBrandModel"
-                  :rules="[requiredValidator]"
-                  label="Modèle"
-                />
-              </VCol>
-
-              <!-- 👉 Post Number -->
+              
+              <!-- 👉 Dial Post Number -->
               <VCol cols="12">
                 <AppTextField
                   v-model="devicePostNumber"
                   :rules="[requiredValidator]"
-                  label="N de Poste"
+                  label="Numéro de poste"
                 />
               </VCol>
 
@@ -170,22 +148,13 @@ watchEffect(fillVaiables)
                 />
               </VCol>
 
-              <!-- 👉 Device User -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="deviceUser"
-                  label="Bénéficaire"
-                  :rules="[requiredValidator]"
-                />
-              </VCol>
-
               <!-- 👉 Status -->
               <VCol cols="12">
                 <AppSelect
                   v-model="deviceStatus"
                   label="Status actuel"
                   :rules="[requiredValidator]"
-                  :items="[{ title: 'Hors ligne', value: 'offline' },{ title: 'En ligne', value: 'connected' }, ]"
+                  :items="[{ title: 'En ligne', value: 'ONLINE' }, { title: 'Hors ligne', value: 'OFFLINE' },]"
                 />
               </VCol>
 
