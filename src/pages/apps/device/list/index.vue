@@ -27,12 +27,15 @@ const options = ref({
 
 // Headers
 const headers = [
+  { title: '', 
+    key: 'data-table-expand',
+  },
   {
     title: 'Marque',
     key: 'device_brand_name',
   },
   {
-    title: 'N Poste',
+    title: 'N° Poste',
     key: 'device_post_number',
   },
   {
@@ -134,7 +137,6 @@ const addNewDevice = async deviceData => {
 // Updqte and refresh Device
 const updateDeviceTrigger = deviceId => {
   deviceListStore.fetchDevice(deviceId).then(response => {
-    console.log(response.data)
     deviceToUpdate.value = response.data
     isUpdateDrawerVisible.value = true
   })
@@ -236,8 +238,31 @@ const deleteDevice = async id => {
             :items-length="totalDevices"
             :headers="headers"
             class="text-no-wrap"
+            expend-on-click
             @update:options="options = $event"
           >
+            <template #expanded-row="slotProps">
+              <tr class="v-data-table__tr">
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Modèle: {{ slotProps.item.raw.device_brand_model }}
+                  </p>
+                  <p class="my-1">
+                    Mode : {{ slotProps.item.raw.device_connexion_mode }}
+                  </p>
+                </td>
+              </tr>
+              <tr class="v-data-table__tr">
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Login: {{ slotProps.item.raw.device_login }}
+                  </p>
+                  <p class="my-1">
+                    Password: {{ slotProps.item.raw.device_password }}
+                  </p>
+                </td>
+              </tr>
+            </template>
             <!-- Device User -->
             <template #item.deviceUser="{ item }">
               <div class="d-flex align-center">

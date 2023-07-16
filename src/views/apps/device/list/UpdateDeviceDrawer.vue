@@ -23,14 +23,18 @@ const emit = defineEmits([
 
 const isFormValid = ref(false)
 const refForm = ref()
+
+const deviceLogin = ref("DEFAULT")
 const deviceUser = ref('Al-Karid')
-const deviceType = ref('TELEPHONE IP')
-const deviceBrandName = ref('Yealink')
-const deviceBrandModel = ref('T33G')
 const devicePostNumber = ref('711')
-const deviceIPAddress = ref("192.168.0.220")
 const deviceStatus = ref("offline")
+const deviceBrandModel = ref('T33G')
+const devicePassword = ref("DEFAULT")
+const deviceBrandName = ref('Yealink')
+const deviceType = ref('TELEPHONE IP')
 const deviceSerialNumber = ref("VNC0015KL")
+const deviceHostname = ref("hostname.local")
+const deviceIPAddress = ref("192.168.0.220")
 
 // 👉 drawer close
 const closeNavigationDrawer = () => {
@@ -49,11 +53,14 @@ const onSubmit = () => {
         device: {
           device_user: deviceUser.value,
           device_type: deviceType.value,
-          device_brand_name: deviceBrandName.value,
-          device_brand_model: deviceBrandModel.value,
-          device_post_number: devicePostNumber.value,
-          device_ip_address: deviceIPAddress.value,
+          device_login: deviceLogin.value,
           device_status: deviceStatus.value,
+          device_hostname: deviceHostname.value,
+          device_password: devicePassword.value,
+          device_brand_name: deviceBrandName.value,
+          device_ip_address: deviceIPAddress.value,
+          device_post_number: devicePostNumber.value,
+          device_brand_model: deviceBrandModel.value,
           device_serial_number: deviceSerialNumber.value,
         } })
       emit('update:isDrawerOpen', false)
@@ -71,13 +78,16 @@ const handleDrawerModelValueUpdate = val => {
 
 const fillVaiables = () => {
   deviceType.value = props.deviceToUpdate.device_type
-  deviceSerialNumber.value = props.deviceToUpdate.device_serial_number
-  deviceBrandName.value = props.deviceToUpdate.device_brand_name
-  deviceBrandModel.value = props.deviceToUpdate.device_brand_model
-  devicePostNumber.value = props.deviceToUpdate.device_post_number
-  deviceIPAddress.value = props.deviceToUpdate.device_ip_address
   deviceUser.value = props.deviceToUpdate.device_user
+  deviceLogin.value = props.deviceToUpdate.device_login
   deviceStatus.value = props.deviceToUpdate.device_status
+  deviceHostname.value = props.deviceToUpdate.device_hostname
+  devicePassword.value = props.deviceToUpdate.device_password
+  deviceBrandName.value = props.deviceToUpdate.device_brand_name
+  deviceIPAddress.value = props.deviceToUpdate.device_ip_address
+  devicePostNumber.value = props.deviceToUpdate.device_post_number
+  deviceBrandModel.value = props.deviceToUpdate.device_brand_model
+  deviceSerialNumber.value = props.deviceToUpdate.device_serial_number
 }
 
 watchEffect(fillVaiables)
@@ -97,7 +107,7 @@ watchEffect(fillVaiables)
       title="Mise à jour Téléphone"
       @cancel="closeNavigationDrawer"
     />
-
+    <VDivider />
     <PerfectScrollbar :options="{ wheelPropagation: false }">
       <VCard flat>
         <VCardText>
@@ -126,15 +136,6 @@ watchEffect(fillVaiables)
                 />
               </VCol>
 
-              <!-- 👉 IP Address -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="deviceIPAddress"
-                  :rules="[requiredValidator]"
-                  label="Addresse IP"
-                />
-              </VCol>
-
               <!-- 👉 Status -->
               <VCol cols="12">
                 <AppSelect
@@ -145,24 +146,71 @@ watchEffect(fillVaiables)
                 />
               </VCol>
 
-              <!-- 👉 Submit and Cancel -->
+              
+              <!-- 👉 Expension fields -->
               <VCol cols="12">
-                <VBtn
-                  color="warning"
-                  type="submit"
-                  class="me-3"
-                >
-                  Modifier
-                </VBtn>
-                <VBtn
-                  type="reset"
-                  variant="tonal"
-                  color="secondary"
-                  @click="closeNavigationDrawer"
-                >
-                  Cancel
-                </VBtn>
+                <VExpansionPanels>
+                  <VExpansionPanel>
+                    <VExpansionPanelTitle>
+                      Autre champs
+                    </VExpansionPanelTitle>
+                    <VExpansionPanelText>
+                      <!-- 👉 IP Address -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="deviceIPAddress"
+                          :rules="[requiredValidator]"
+                          label="Addresse IP"
+                        />
+                      </VCol>
+                      <!-- 👉 Hostname -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="deviceHostname"
+                          label="Hostname"
+                        />
+                      </VCol>
+
+                      <!-- 👉 Login -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="deviceLogin"
+                          label="Login"
+                        />
+                      </VCol>
+
+                      <!-- 👉 Password -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="devicePassword"
+                          label="Password"
+                        />
+                      </VCol>
+                    </VExpansionPanelText>
+                  </VExpansionPanel>
+                </VExpansionPanels>
               </VCol>
+
+              <VCol cols="12">
+                <!-- 👉 Submit and Cancel -->
+                <VCol cols="12">
+                  <VBtn
+                    color="warning"
+                    type="submit"
+                    class="me-3"
+                  >
+                    Modifier
+                  </VBtn>
+                  <VBtn
+                    type="reset"
+                    variant="tonal"
+                    color="secondary"
+                    @click="closeNavigationDrawer"
+                  >
+                    Cancel
+                  </VBtn>
+                </VCol>
+              </vcol>
             </VRow>
           </VForm>
         </VCardText>

@@ -18,14 +18,20 @@ const emit = defineEmits([
 
 const isFormValid = ref(false)
 const refForm = ref()
+
 const deviceUser = ref('Al-Karid')
+const devicePostNumber = ref(999)
+const deviceStatus = ref("OFFLINE")
+const deviceBrandModel = ref('T33G')
 const deviceType = ref('TELEPHONE IP')
 const deviceBrandName = ref('Yealink')
-const deviceBrandModel = ref('T33G')
-const devicePostNumber = ref('711')
-const deviceIPAddress = ref("192.168.0.220")
-const deviceStatus = ref("OFFLINE")
 const deviceSerialNumber = ref("VNC0015KL")
+const deviceIPAddress = ref("192.168.0.220")
+
+const deviceLogin = ref("DEFAULT")
+const devicePassword = ref("DEFAULT")
+const deviceConnexionMode = ref("CABLE")
+const deviceHostname = ref("hostname.local")
 
 // 👉 drawer close
 const closeNavigationDrawer = () => {
@@ -42,12 +48,17 @@ const onSubmit = () => {
       emit('userData', {
         device_user: deviceUser.value,
         device_type: deviceType.value,
+        device_status: deviceStatus.value,
+        device_ip_address: deviceIPAddress.value,
         device_brand_name: deviceBrandName.value,
         device_brand_model: deviceBrandModel.value,
         device_post_number: devicePostNumber.value,
-        device_ip_address: deviceIPAddress.value,
-        device_status: deviceStatus.value,
         device_serial_number: deviceSerialNumber.value,
+
+        device_login: deviceLogin.value,
+        device_hostname: deviceHostname.value,
+        device_password: devicePassword.value,      
+        device_connexion_mode: deviceConnexionMode.value,      
       })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
@@ -77,6 +88,8 @@ const handleDrawerModelValueUpdate = val => {
       title="Nouveau Téléphone"
       @cancel="closeNavigationDrawer"
     />
+
+    <VDivider />
 
     <PerfectScrollbar :options="{ wheelPropagation: false }">
       <VCard flat>
@@ -163,6 +176,42 @@ const handleDrawerModelValueUpdate = val => {
                   :rules="[requiredValidator]"
                   :items="[{ title: 'En line', value: 'ONLINE' },{ title: 'Hors ligne', value: 'OFFLINE' },]"
                 />
+              </VCol>
+
+              <!-- 👉 Expension fields -->
+              <VCol cols="12">
+                <VExpansionPanels>
+                  <VExpansionPanel>
+                    <VExpansionPanelTitle>
+                      Autre champs
+                    </VExpansionPanelTitle>
+                    <VExpansionPanelText>
+                      <!-- 👉 Hostname -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="deviceHostname"
+                          label="Hostname"
+                        />
+                      </VCol>
+
+                      <!-- 👉 Login -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="deviceLogin"
+                          label="Login"
+                        />
+                      </VCol>
+
+                      <!-- 👉 Password -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="devicePassword"
+                          label="Password"
+                        />
+                      </VCol>
+                    </VExpansionPanelText>
+                  </VExpansionPanel>
+                </VExpansionPanels>
               </VCol>
 
               <!-- 👉 Submit and Cancel -->

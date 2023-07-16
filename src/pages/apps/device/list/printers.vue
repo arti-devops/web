@@ -27,9 +27,12 @@ const options = ref({
 
 // Headers
 const headers = [
+  { title: '', 
+    key: 'data-table-expand',
+  },
   {
     title: 'Imprimante',
-    key: 'device_name',
+    key: 'device_hostname',
   },
   {
     title: 'Marque',
@@ -40,8 +43,8 @@ const headers = [
     key: 'device_ip_address',
   },
   {
-    title: 'Bénéficiaire',
-    key: 'device_user',
+    title: 'Mode',
+    key: 'device_connexion_mode',
   },
   {
     title: 'Statut',
@@ -122,6 +125,18 @@ const resolveDeviceStatusVariant = stat => {
   return { status: 'Statut inconnu', color: 'secondary' }
 }
 
+const resolveDeviceConnexionModeVariant = stat => {
+  const statLowerCase = stat.toLowerCase()
+  if (statLowerCase === 'cable')
+    return { status: 'Cable', color: 'primary' }
+  if (statLowerCase === 'wifi')
+    return { status: 'WIFI', color: 'error' }
+  if (statLowerCase === 'usb')
+    return { status: 'USB', color: 'warning' }
+    
+  return { status: 'Statut inconnu', color: 'secondary' }
+}
+
 const isAddNewUserDrawerVisible = ref(false)
 const isUpdateDrawerVisible = ref(false)
 
@@ -134,7 +149,6 @@ const addNewDevice = async deviceData => {
 // Updqte and refresh Device
 const updateDeviceTrigger = deviceId => {
   deviceListStore.fetchDevice(deviceId).then(response => {
-    console.log(response.data)
     deviceToUpdate.value = response.data
     isUpdateDrawerVisible.value = true
   })
@@ -233,8 +247,42 @@ const deleteDevice = async id => {
             :items-length="totalDevices"
             :headers="headers"
             class="text-no-wrap"
+            expend-on-click
             @update:options="options = $event"
           >
+            <template #expanded-row="slotProps">
+              <tr class="v-data-table__tr">
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Nom: {{ slotProps.item.raw.device_name }}
+                  </p>
+                  <p class="my-1">
+                    Modèle: {{ slotProps.item.raw.device_brand_model }}
+                  </p>
+                  <p class="my-1">
+                    Numéro de serie: {{ slotProps.item.raw.device_serial_number }}
+                  </p>
+                </td>
+              </tr>
+              <tr class="v-data-table__tr">
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Login: {{ slotProps.item.raw.device_login }}
+                  </p>
+                  <p class="my-1">
+                    Password: {{ slotProps.item.raw.device_password }}
+                  </p>
+                </td>
+              </tr>
+              <tr class="v-data-table__tr">
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Bénéficaire: {{ slotProps.item.raw.device_user }}
+                  </p>
+                </td>
+              </tr>
+            </template>
+            
             <!-- Device User -->
             <template #item.deviceUser="{ item }">
               <div class="d-flex align-center">
@@ -299,6 +347,18 @@ const deleteDevice = async id => {
               <span class="text-capitalize font-weight-medium">{{ item.raw.device_brand_name }}</span>
             </template>
 
+            <!-- 👉 Connexion mode -->
+            <template #item.device_connexion_mode="{ item }">
+              <VChip
+                :color="resolveDeviceConnexionModeVariant(item.raw.device_connexion_mode).color"
+                size="small"
+                label
+                class="text-capitalize"
+              >
+                {{ resolveDeviceConnexionModeVariant(item.raw.device_connexion_mode).status }}
+              </VChip>
+            </template>
+
             <!-- 👉 Status -->
             <template #item.device_status="{ item }">
               <VChip
@@ -346,21 +406,21 @@ const deleteDevice = async id => {
                         <VIcon icon="tabler-file-arrow-right" />
                       </template>
 
-                      <VListItemTitle>View</VListItemTitle>
+                      <VListItemTitle>Voir</VListItemTitle>
                     </VListItem>
 
                     <VListItem @click="updateDeviceTrigger(item.raw.device_id)">
                       <template #prepend>
                         <VIcon icon="tabler-edit" />
                       </template>
-                      <VListItemTitle>Edit</VListItemTitle>
+                      <VListItemTitle>Modifier</VListItemTitle>
                     </VListItem>
 
                     <VListItem @click="deleteDevice(item.raw.device_id)">
                       <template #prepend>
                         <VIcon icon="tabler-trash" />
                       </template>
-                      <VListItemTitle>Delete</VListItemTitle>
+                      <VListItemTitle>Supprimer</VListItemTitle>
                     </VListItem>
                   </VList>
                 </VMenu>

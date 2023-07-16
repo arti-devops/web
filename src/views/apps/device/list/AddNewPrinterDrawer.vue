@@ -19,14 +19,18 @@ const emit = defineEmits([
 const isFormValid = ref(false)
 const refForm = ref()
 
-const deviceBrandName = ref('HP')
-const deviceUser = ref('Al-Karid')
-const deviceStatus = ref("OFFLINE")
-const deviceType = ref('IMPRIMANTE')
-const deviceBrandModel = ref('MFP183fw')
-const deviceIPAddress = ref("192.168.0.220")
 const deviceName = ref('Color LaserJet Pro')
+const deviceUser = ref('Al-Karid')
+const deviceType = ref('IMPRIMANTE')
+const deviceLogin = ref("DEFAULT")
+const deviceStatus = ref("OFFLINE")
+const deviceHostname = ref("IP-DSE")
+const devicePassword = ref("DEFAULT")
+const deviceIPAddress = ref("192.168.0.220")
+const deviceBrandName = ref('HP')
+const deviceBrandModel = ref('MFP183fw')
 const deviceSerialNumber = ref("VNC0015KL")
+const deviceConnexionMode = ref("CABLE")
 
 // 👉 drawer close
 const closeNavigationDrawer = () => {
@@ -44,11 +48,15 @@ const onSubmit = () => {
         device_user: deviceUser.value,
         device_type: deviceType.value,
         device_name: deviceName.value,
+        device_login: deviceLogin.value,
         device_status: deviceStatus.value,
+        device_hostname: deviceHostname.value,
+        device_password: devicePassword.value,
         device_ip_address: deviceIPAddress.value,
         device_brand_name: deviceBrandName.value,
         device_brand_model: deviceBrandModel.value,
         device_serial_number: deviceSerialNumber.value,
+        device_connexion_mode: deviceConnexionMode.value,
       })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
@@ -75,9 +83,11 @@ const handleDrawerModelValueUpdate = val => {
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Nouvel imprimante"
+      title="Nouvel Imprimante"
       @cancel="closeNavigationDrawer"
     />
+
+    <VDivider />
 
     <PerfectScrollbar :options="{ wheelPropagation: false }">
       <VCard flat>
@@ -142,8 +152,16 @@ const handleDrawerModelValueUpdate = val => {
               <VCol cols="12">
                 <AppTextField
                   v-model="deviceIPAddress"
-                  :rules="[requiredValidator]"
                   label="Addresse IP"
+                />
+              </VCol>
+
+              <!-- 👉 Connexion Mode -->
+              <VCol cols="12">
+                <AppSelect
+                  v-model="deviceConnexionMode"
+                  label="Mode de connexion"
+                  :items="[{title:'Cable',value:'ETHERNET'},{title:'WIFI',value:'WIFI'},{title:'USB',value:'USB'},]"
                 />
               </VCol>
 
@@ -164,6 +182,42 @@ const handleDrawerModelValueUpdate = val => {
                   :rules="[requiredValidator]"
                   :items="[{ title: 'En line', value: 'ONLINE' },{ title: 'Hors ligne', value: 'OFFLINE' },]"
                 />
+              </VCol>
+
+              <!-- 👉 Expension fields -->
+              <VCol cols="12">
+                <VExpansionPanels>
+                  <VExpansionPanel>
+                    <VExpansionPanelTitle>
+                      Autre champs
+                    </VExpansionPanelTitle>
+                    <VExpansionPanelText>
+                      <!-- 👉 Hostname -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="deviceHostname"
+                          label="Hostname"
+                        />
+                      </VCol>
+
+                      <!-- 👉 Login -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="deviceLogin"
+                          label="Login"
+                        />
+                      </VCol>
+
+                      <!-- 👉 Password -->
+                      <VCol cols="12">
+                        <AppTextField
+                          v-model="devicePassword"
+                          label="Password"
+                        />
+                      </VCol>
+                    </VExpansionPanelText>
+                  </VExpansionPanel>
+                </VExpansionPanels>
               </VCol>
 
               <!-- 👉 Submit and Cancel -->
