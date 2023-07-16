@@ -9,11 +9,16 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  deviceToUpdate: {
+    type: Object,
+    required: true,
+  },
 })
 
 const emit = defineEmits([
   'update:isDrawerOpen',
-  'userData',
+  'deviceData',
+  'deviceId',
 ])
 
 const isFormValid = ref(false)
@@ -24,7 +29,7 @@ const deviceBrandName = ref('Yealink')
 const deviceBrandModel = ref('T33G')
 const devicePostNumber = ref('711')
 const deviceIPAddress = ref("192.168.0.220")
-const deviceStatus = ref("OFFLINE")
+const deviceStatus = ref("offline")
 const deviceSerialNumber = ref("VNC0015KL")
 
 // 👉 drawer close
@@ -39,16 +44,18 @@ const closeNavigationDrawer = () => {
 const onSubmit = () => {
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
-      emit('userData', {
-        device_user: deviceUser.value,
-        device_type: deviceType.value,
-        device_brand_name: deviceBrandName.value,
-        device_brand_model: deviceBrandModel.value,
-        device_post_number: devicePostNumber.value,
-        device_ip_address: deviceIPAddress.value,
-        device_status: deviceStatus.value,
-        device_serial_number: deviceSerialNumber.value,
-      })
+      emit('deviceData', {
+        id: props.deviceToUpdate.device_id,
+        device: {
+          device_user: deviceUser.value,
+          device_type: deviceType.value,
+          device_brand_name: deviceBrandName.value,
+          device_brand_model: deviceBrandModel.value,
+          device_post_number: String(devicePostNumber.value),
+          device_ip_address: deviceIPAddress.value,
+          device_status: deviceStatus.value,
+          device_serial_number: deviceSerialNumber.value,
+        } })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
         refForm.value?.reset()
@@ -61,6 +68,32 @@ const onSubmit = () => {
 const handleDrawerModelValueUpdate = val => {
   emit('update:isDrawerOpen', val)
 }
+
+const resolveDeviceStatusString = stat => {
+  try {
+    const status = stat.toLowerCase()
+    if(status === "online") return 'En ligne'
+    if(status === "offline") return 'Hors ligne'
+    
+    return 'Statut inconnu'
+    
+  } catch (error) {
+    //console.log(error)
+  }
+}
+
+const fillVaiables = () => {
+  deviceType.value = props.deviceToUpdate.device_type
+  deviceSerialNumber.value = props.deviceToUpdate.device_serial_number
+  deviceBrandName.value = props.deviceToUpdate.device_brand_name
+  deviceBrandModel.value = props.deviceToUpdate.device_brand_model
+  devicePostNumber.value = props.deviceToUpdate.device_post_number
+  deviceIPAddress.value = props.deviceToUpdate.device_ip_address
+  deviceUser.value = props.deviceToUpdate.device_user
+  deviceStatus.value = resolveDeviceStatusString(props.deviceToUpdate.device_status)
+}
+
+watchEffect(fillVaiables)
 </script>
 
 <template>
@@ -74,7 +107,7 @@ const handleDrawerModelValueUpdate = val => {
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Nouveau Téléphone"
+      title="Mise à jour Téléphone"
       @cancel="closeNavigationDrawer"
     />
 
@@ -88,47 +121,16 @@ const handleDrawerModelValueUpdate = val => {
             @submit.prevent="onSubmit"
           >
             <VRow>
-              <!-- 👉 Device Type -->
+              <!-- 👉 Device User -->
               <VCol cols="12">
-                <AppSelect
-                  v-model="deviceType"
+                <AppTextField
+                  v-model="deviceUser"
+                  label="Bénéficaire"
                   :rules="[requiredValidator]"
-                  model-value="TELEPHONE IP"
-                  label="Type de l'équipement"
-                  :items="['TELEPHONE IP']"
-                  disabled
                 />
               </VCol>
               
-              <!-- 👉 Device Serial Number -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="deviceSerialNumber"
-                  :rules="[requiredValidator]"
-                  label="Numéro de série"
-                />
-              </VCol>
-
-              <!-- 👉 Device Brand Name -->
-              <VCol cols="12">
-                <AppSelect
-                  v-model="deviceBrandName"
-                  :rules="[requiredValidator]"
-                  label="Marque"
-                  :items="['Yealink','Grandstream']"
-                />
-              </VCol>
-
-              <!-- 👉 Model -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="deviceBrandModel"
-                  :rules="[requiredValidator]"
-                  label="Modèle"
-                />
-              </VCol>
-
-              <!-- 👉 Post Number -->
+              <!-- 👉 Dial Post Number -->
               <VCol cols="12">
                 <AppTextField
                   v-model="devicePostNumber"
@@ -146,32 +148,24 @@ const handleDrawerModelValueUpdate = val => {
                 />
               </VCol>
 
-              <!-- 👉 Device User -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="deviceUser"
-                  label="Bénéficaire"
-                  :rules="[requiredValidator]"
-                />
-              </VCol>
-
               <!-- 👉 Status -->
               <VCol cols="12">
                 <AppSelect
                   v-model="deviceStatus"
                   label="Statut actuel"
                   :rules="[requiredValidator]"
-                  :items="[{ title: 'En line', value: 'ONLINE' },{ title: 'Hors ligne', value: 'OFFLINE' },]"
+                  :items="[{ title: 'En ligne', value: 'ONLINE' }, { title: 'Hors ligne', value: 'OFFLINE' },]"
                 />
               </VCol>
 
               <!-- 👉 Submit and Cancel -->
               <VCol cols="12">
                 <VBtn
+                  color="warning"
                   type="submit"
                   class="me-3"
                 >
-                  Valider
+                  Modifier
                 </VBtn>
                 <VBtn
                   type="reset"

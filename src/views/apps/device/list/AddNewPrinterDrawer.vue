@@ -18,13 +18,14 @@ const emit = defineEmits([
 
 const isFormValid = ref(false)
 const refForm = ref()
+
+const deviceBrandName = ref('HP')
 const deviceUser = ref('Al-Karid')
-const deviceType = ref('TELEPHONE IP')
-const deviceBrandName = ref('Yealink')
-const deviceBrandModel = ref('T33G')
-const devicePostNumber = ref('711')
-const deviceIPAddress = ref("192.168.0.220")
 const deviceStatus = ref("OFFLINE")
+const deviceType = ref('IMPRIMANTE')
+const deviceBrandModel = ref('MFP183fw')
+const deviceIPAddress = ref("192.168.0.220")
+const deviceName = ref('Color LaserJet Pro')
 const deviceSerialNumber = ref("VNC0015KL")
 
 // 👉 drawer close
@@ -42,11 +43,11 @@ const onSubmit = () => {
       emit('userData', {
         device_user: deviceUser.value,
         device_type: deviceType.value,
+        device_name: deviceName.value,
+        device_status: deviceStatus.value,
+        device_ip_address: deviceIPAddress.value,
         device_brand_name: deviceBrandName.value,
         device_brand_model: deviceBrandModel.value,
-        device_post_number: devicePostNumber.value,
-        device_ip_address: deviceIPAddress.value,
-        device_status: deviceStatus.value,
         device_serial_number: deviceSerialNumber.value,
       })
       emit('update:isDrawerOpen', false)
@@ -74,7 +75,7 @@ const handleDrawerModelValueUpdate = val => {
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Nouveau Téléphone"
+      title="Nouvel imprimante"
       @cancel="closeNavigationDrawer"
     />
 
@@ -93,13 +94,22 @@ const handleDrawerModelValueUpdate = val => {
                 <AppSelect
                   v-model="deviceType"
                   :rules="[requiredValidator]"
-                  model-value="TELEPHONE IP"
+                  model-value="IMPRIMANTE"
                   label="Type de l'équipement"
-                  :items="['TELEPHONE IP']"
+                  :items="['IMPRIMANTE']"
                   disabled
                 />
               </VCol>
               
+              <!-- 👉 Device Name -->
+              <VCol cols="12">
+                <AppTextField
+                  v-model="deviceName"
+                  :rules="[requiredValidator]"
+                  label="Mom de l'imprimante"
+                />
+              </VCol>
+
               <!-- 👉 Device Serial Number -->
               <VCol cols="12">
                 <AppTextField
@@ -115,7 +125,7 @@ const handleDrawerModelValueUpdate = val => {
                   v-model="deviceBrandName"
                   :rules="[requiredValidator]"
                   label="Marque"
-                  :items="['Yealink','Grandstream']"
+                  :items="['HP','Canon','Xerox']"
                 />
               </VCol>
 
@@ -125,15 +135,6 @@ const handleDrawerModelValueUpdate = val => {
                   v-model="deviceBrandModel"
                   :rules="[requiredValidator]"
                   label="Modèle"
-                />
-              </VCol>
-
-              <!-- 👉 Post Number -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="devicePostNumber"
-                  :rules="[requiredValidator]"
-                  label="Numéro de poste"
                 />
               </VCol>
 

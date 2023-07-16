@@ -44,7 +44,7 @@ const headers = [
     key: 'device_user',
   },
   {
-    title: 'Status',
+    title: 'Statut',
     key: 'device_status',
   },
   {
@@ -119,7 +119,7 @@ const resolveDeviceStatusVariant = stat => {
   if (statLowerCase === 'offline')
     return { status: 'Hors ligne', color: 'error' }
     
-  return { status: 'Status inconnu', color: 'secondary' }
+  return { status: 'Statut inconnu', color: 'secondary' }
 }
 
 const isAddNewUserDrawerVisible = ref(false)
@@ -190,7 +190,7 @@ const deleteDevice = async id => {
             <AppSelect
               v-model="selectedStatus"
               :items="status"
-              model-value="Status"
+              model-value="Statut"
               clearable
               clear-icon="tabler-x"
             />
@@ -327,21 +327,21 @@ const deleteDevice = async id => {
                         <VIcon icon="tabler-file-arrow-right" />
                       </template>
 
-                      <VListItemTitle>View</VListItemTitle>
+                      <VListItemTitle>Voir</VListItemTitle>
                     </VListItem>
 
                     <VListItem @click="updateDeviceTrigger(item.raw.device_id)">
                       <template #prepend>
                         <VIcon icon="tabler-edit" />
                       </template>
-                      <VListItemTitle>Edit</VListItemTitle>
+                      <VListItemTitle>Modifier</VListItemTitle>
                     </VListItem>
 
                     <VListItem @click="deleteDevice(item.raw.device_id)">
                       <template #prepend>
                         <VIcon icon="tabler-trash" />
                       </template>
-                      <VListItemTitle>Delete</VListItemTitle>
+                      <VListItemTitle>Supprimer</VListItemTitle>
                     </VListItem>
                   </VList>
                 </VMenu>

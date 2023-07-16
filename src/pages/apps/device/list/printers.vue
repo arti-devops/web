@@ -1,7 +1,7 @@
 <script setup>
 import { paginationMeta } from '@/@fake-db/utils'
-import AddNewDeviceDrawer from '@/views/apps/device/list/AddNewDeviceDrawer.vue'
-import UpdateDeviceDrawer from '@/views/apps/device/list/UpdateDeviceDrawer.vue'
+import AddNewPrinterDrawer from '@/views/apps/device/list/AddNewPrinterDrawer.vue'
+import UpdatePrinterDrawer from '@/views/apps/device/list/UpdatePrinterDrawer.vue'
 import { useDeviceListStore } from '@/views/apps/device/useDeviceListStore'
 import avatar1 from '@images/avatars/avatar-1.png'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
@@ -44,7 +44,7 @@ const headers = [
     key: 'device_user',
   },
   {
-    title: 'Status',
+    title: 'Statut',
     key: 'device_status',
   },
   {
@@ -112,14 +112,14 @@ const resolveDeviceTypeVariant = dtype => {
   }
 }
 
-const resolveStatusStatusVariant = stat => {
+const resolveDeviceStatusVariant = stat => {
   const statLowerCase = stat.toLowerCase()
   if (statLowerCase === 'online')
-    return 'success'
+    return { status: 'En ligne', color: 'success' }
   if (statLowerCase === 'offline')
-    return 'error'
-  
-  return 'primary'
+    return { status: 'Hors ligne', color: 'error' }
+    
+  return { status: 'Statut inconnu', color: 'secondary' }
 }
 
 const isAddNewUserDrawerVisible = ref(false)
@@ -186,7 +186,7 @@ const deleteDevice = async id => {
               <AppSelect
                 v-model="selectedStatus"
                 :items="status"
-                model-value="Status"
+                model-value="Statut"
                 clearable
                 clear-icon="tabler-x"
               />
@@ -302,12 +302,12 @@ const deleteDevice = async id => {
             <!-- 👉 Status -->
             <template #item.device_status="{ item }">
               <VChip
-                :color="resolveStatusStatusVariant(item.raw.device_status)"
+                :color="resolveDeviceStatusVariant(item.raw.device_status).color"
                 size="small"
                 label
                 class="text-capitalize"
               >
-                {{ item.raw.device_status }}
+                {{ resolveDeviceStatusVariant(item.raw.device_status).status }}
               </VChip>
             </template>
 
@@ -409,11 +409,11 @@ const deleteDevice = async id => {
         </VCard>
 
         <!-- 👉 Add New User -->
-        <AddNewDeviceDrawer
+        <AddNewPrinterDrawer
           v-model:isDrawerOpen="isAddNewUserDrawerVisible"
           @user-data="addNewDevice"
         />
-        <UpdateDeviceDrawer
+        <UpdatePrinterDrawer
           v-model:isDrawerOpen="isUpdateDrawerVisible"
           :device-to-update="deviceToUpdate"
           @device-data="updateDevice"

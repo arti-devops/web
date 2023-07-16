@@ -51,7 +51,7 @@ const onSubmit = () => {
           device_type: deviceType.value,
           device_brand_name: deviceBrandName.value,
           device_brand_model: deviceBrandModel.value,
-          device_post_number: String(devicePostNumber.value),
+          device_post_number: devicePostNumber.value,
           device_ip_address: deviceIPAddress.value,
           device_status: deviceStatus.value,
           device_serial_number: deviceSerialNumber.value,
@@ -69,19 +69,6 @@ const handleDrawerModelValueUpdate = val => {
   emit('update:isDrawerOpen', val)
 }
 
-const resolveDeviceStatusString = stat => {
-  try {
-    const status = stat.toLowerCase()
-    if(status === "online") return 'En ligne'
-    if(status === "offline") return 'Hors ligne'
-    
-    return 'Statut inconnu'
-    
-  } catch (error) {
-    //console.log(error)
-  }
-}
-
 const fillVaiables = () => {
   deviceType.value = props.deviceToUpdate.device_type
   deviceSerialNumber.value = props.deviceToUpdate.device_serial_number
@@ -90,7 +77,7 @@ const fillVaiables = () => {
   devicePostNumber.value = props.deviceToUpdate.device_post_number
   deviceIPAddress.value = props.deviceToUpdate.device_ip_address
   deviceUser.value = props.deviceToUpdate.device_user
-  deviceStatus.value = resolveDeviceStatusString(props.deviceToUpdate.device_status)
+  deviceStatus.value = props.deviceToUpdate.device_status
 }
 
 watchEffect(fillVaiables)
@@ -152,7 +139,7 @@ watchEffect(fillVaiables)
               <VCol cols="12">
                 <AppSelect
                   v-model="deviceStatus"
-                  label="Status actuel"
+                  label="Statut actuel"
                   :rules="[requiredValidator]"
                   :items="[{ title: 'En ligne', value: 'ONLINE' }, { title: 'Hors ligne', value: 'OFFLINE' },]"
                 />
