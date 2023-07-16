@@ -12,6 +12,7 @@ const projectListStore = useProjectListStore()
 const projects = ref([])
 const totalProjects =ref(0)
 const projectToUpdate = ref({})
+const membersList = ref([])
 
 // Filter Variables
 const totalPage = ref(1)
@@ -130,6 +131,8 @@ const resolveStatusStatusVariant = stat => {
     return { "color": "success", "status_name": "En cours" }
   if (statLowerCase === 'pending')
     return { "color": "primary", "status_name": "En attente" }
+  
+  return { "color": "secondary", "status_name": "Statut inconnu" }
 }
 
 // CRUD Functions
@@ -156,8 +159,7 @@ const updateProjectTrigger = projectId => {
 
 const updateProject = async projectData => {
   await projectListStore.updateProject(projectData)
-
-  //fetchProjects()
+  queryProjects()
 }
 
 // Delete and refetch Project

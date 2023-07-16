@@ -1,7 +1,4 @@
 <script setup>
-import {
-  requiredValidator,
-} from '@validators'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
 const props = defineProps({
@@ -28,7 +25,6 @@ const refForm = ref()
 //const projectSDate = ref("2023-05-01")
 const projectEDate = ref("2023-05-01")
 const projectStatus = ref("IN PROGRESS")
-const projectBudget = ref(1500000)
 
 //const projectManager = ref("ID-CISSE")
 //const projectMembers = ref(['ID-KANDE'])
@@ -51,18 +47,8 @@ const onSubmit = () => {
       emit('projectData', {
         id: props.projectToUpdate.project_id,
         project: {
-        //project_title: projectTitle.value,
-        //project_budget: projectBudget.value,
           project_status: projectStatus.value,
-
-          //project_manager: projectManager.value,
-          //project_stratob: projectStratOb.value,
-          //project_members: projectMembers.value,
           project_end_date: projectEDate.value,
-
-        //project_direction: projectDirection.value,
-        //project_start_date: projectSDate.value,
-        //project_description: projectDescription.value,
         } })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
@@ -99,7 +85,7 @@ const fillVaiables = () => {
   }else{
     projectEDate.value = new Date()
   }
-  projectStatus.value = resolveProjectStatusString(props.projectToUpdate.project_status)
+  projectStatus.value = props.projectToUpdate.project_status
 }
 
 watchEffect(fillVaiables)
@@ -136,9 +122,8 @@ watchEffect(fillVaiables)
               <VCol cols="12">
                 <AppSelect
                   v-model="projectStatus"
-                  :rules="[requiredValidator]"
                   label="Statut"
-                  :items="[{title:'Non démarré',value:'SHCEDULED'},
+                  :items="[{title:'Non démarré',value:'PENDING'},
                            {title:'En cours', value:'IN PROGRESS'},
                            {title:'Terminé', value:'FINISHED'},
                            {title:'Suspendu', value:'SUSPENDED'},
@@ -150,7 +135,6 @@ watchEffect(fillVaiables)
               <VCol cols="12">
                 <AppDateTimePicker
                   v-model="projectEDate"
-                  :rules="[requiredValidator]"
                   label="Date de fin"
                 />
               </VCol>

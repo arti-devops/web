@@ -1,8 +1,7 @@
 <script setup>
 import AppDateTimePicker from '@/@core/components/app-form-elements/AppDateTimePicker.vue'
-import {
-  requiredValidator,
-} from '@validators'
+import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
+import { requiredValidator } from '@validators'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
 const props = defineProps({
@@ -17,16 +16,21 @@ const emit = defineEmits([
   'projectData',
 ])
 
+const projectListStore = useProjectListStore()
+
 const projectTitle = ref("Simple Project")
 const projectSDate = ref("2023-05-01")
 const projectEDate = ref("2023-09-07")
 const projectStatus = ref("IN PROGRESS")
 const projectBudget = ref(1500000)
-const projectManager = ref("ID-CISSE")
-const projectMembers = ref(['ID-KANDE'])
+const projectManager = ref()
+const projectMembers = ref([])
 const projectStratOb = ref("OBS-001")
 const projectDirection = ref("DSESP")
 const projectDescription = ref("Advanced Web App")
+
+const membersList = ref([])
+let simpleMembersList = []
 
 const isFormValid = ref(false)
 const refForm = ref()
@@ -40,16 +44,38 @@ const closeNavigationDrawer = () => {
   })
 }
 
+const restructureProjectMembersData = () =>{
+  // Restructure Project Manager data
+  let pManager = simpleMembersList.find(item => item.value === projectManager.value)
+  pManager["role"] = "MANAGER"
+
+  let pMembers = Object.values(projectMembers.value).map(item => {
+    const foundObject = simpleMembersList.find(obj => obj.value === item)
+    
+    return foundObject ? { title: foundObject.title, value: item, role: "MEMBER" } : null
+  })
+
+  pMembers.unshift(pManager)
+
+  return pMembers.map(item => ({
+    project_member_fullname: item.title.trim(),
+    project_member_matricule: item.value,
+    project_member_role: item.role,
+  }))
+}
+
 const onSubmit = () => {
+
+  let pMembers = restructureProjectMembersData()
+  
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
       emit('projectData', {
         project_title: projectTitle.value,
         project_budget: projectBudget.value,
         project_status: projectStatus.value,
-        project_manager: projectManager.value,
         project_stratob: projectStratOb.value,
-        project_members: projectMembers.value,
+        project_members: pMembers,
         project_end_date: projectEDate.value,
         project_direction: projectDirection.value,
         project_start_date: projectSDate.value,
@@ -67,6 +93,24 @@ const onSubmit = () => {
 const handleDrawerModelValueUpdate = val => {
   emit('update:isDrawerOpen', val)
 }
+
+const fetchMembersList = async () =>{
+  await projectListStore.provideMembersList().then(response => {
+    membersList.value = response.data
+  })
+
+  const simpleList = Array.from(membersList.value).map(item => ({
+    title: item.member_fullname,
+    value: item.member_matricule,
+  }))
+
+  console.log(simpleList)
+  simpleMembersList = simpleList
+  
+  return simpleList
+}
+
+watchEffect((fetchMembersList))
 </script>
 
 <template>
@@ -122,13 +166,19 @@ const handleDrawerModelValueUpdate = val => {
               </VCol>
 
               <!-- 👉 Project Manager -->
-              <VCol cols="12">
-                <AppSelect
+              <VCol
+                v-if="membersList"
+                cols="12"
+              >
+                <AppAutocomplete
                   v-model="projectManager"
                   :rules="[requiredValidator]"
                   label="Responsable du projet"
-                  :items="[{title:'CISSE Alassane', value:'OBS-001'},
-                           {title:'DJIRE Lamine', value:'OBS-002'}]"
+                  :items="simpleMembersList"
+                  item-title="title"
+                  item-value="value"
+                  chips
+                  clearable
                 />
               </VCol>
 
@@ -180,13 +230,10 @@ const handleDrawerModelValueUpdate = val => {
                 <AppAutocomplete
                   v-model="projectMembers"
                   label="Participants"
-                  :items="[{title:'KOUADIO Edmon',value:'ID-KOUADIO'},
-                           {title:'GNAGNE Mel',value:'ID-GNAGNE'},
-                           {title:'SEYNOU Aicha',value:'ID-SEYNOU'},
-                           {title:'DRO Chris',value:'ID-DRO'},
-                           {title:'KANDE Daouda',value:'ID-KANDE'}]"
+                  :items="simpleMembersList"
                   chips
                   multiple
+                  clearable
                 />
               </VCol>
 

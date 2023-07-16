@@ -32,7 +32,7 @@ export const useProjectListStore = defineStore('ProjectListStore', {
     // 👉 Update Project
     updateProject(projectData) {
       return new Promise(async (resolve, reject) => {
-        await axios.put(`${BASE_URL}/projects/${projectData.id}`, { project: projectData.project }).then(response => resolve(response)).catch(error => reject(error))
+        await axios.put(`${BASE_URL}/projects/${projectData.id}`, { update: projectData.project }).then(response => resolve(response)).catch(error => reject(error))
       })
     },
 
@@ -42,5 +42,9 @@ export const useProjectListStore = defineStore('ProjectListStore', {
         await axios.delete(`${BASE_URL}/projects/${id}`).then(response => resolve(response)).catch(error => reject(error))
       })
     },
+    
+    // 👉 Provice Usernames
+    provideMembersList(){ return axios.get(`${BASE_URL}/provider/form/members`)},
+
   },
 })
