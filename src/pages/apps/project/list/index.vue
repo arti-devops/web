@@ -54,7 +54,7 @@ const headers = [
     key: 'project_budget',
   },
   {
-    title: 'Status',
+    title: 'Statut',
     key: 'project_status',
   },
   {
@@ -198,7 +198,7 @@ watchEffect(queryProjects)
                 :items="directions"
                 clearable
                 clear-icon="tabler-x"
-                model-value="Directions"
+                model-value="Direction"
               />
                 
               <!-- 👉 Filter By Direction Status  -->
@@ -207,7 +207,7 @@ watchEffect(queryProjects)
                 :items="status"
                 clearable
                 clear-icon="tabler-x"
-                model-value="Status"
+                model-value="Statut"
               />
             </div>
             <VSpacer />

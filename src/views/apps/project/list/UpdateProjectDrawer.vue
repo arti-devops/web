@@ -116,7 +116,7 @@ watchEffect(fillVaiables)
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Mise à Jour"
+      title="Mise à jour Projet"
       @cancel="closeNavigationDrawer"
     />
 
@@ -137,7 +137,7 @@ watchEffect(fillVaiables)
                 <AppSelect
                   v-model="projectStatus"
                   :rules="[requiredValidator]"
-                  label="Status"
+                  label="Statut"
                   :items="[{title:'Non démarré',value:'SHCEDULED'},
                            {title:'En cours', value:'IN PROGRESS'},
                            {title:'Terminé', value:'FINISHED'},
