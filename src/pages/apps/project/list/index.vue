@@ -12,7 +12,6 @@ const projectListStore = useProjectListStore()
 const projects = ref([])
 const totalProjects =ref(0)
 const projectToUpdate = ref({})
-const membersList = ref([])
 
 // Filter Variables
 const totalPage = ref(1)
@@ -148,7 +147,7 @@ const addNewProject = async projectData => {
   queryProjects()
 }
 
-// Updqte and refresh Project
+// Update and refresh Project
 const updateProjectTrigger = projectId => {
   projectListStore.fetchProject(projectId).then(response => {
     console.log(response.data)
@@ -164,8 +163,8 @@ const updateProject = async projectData => {
 
 // Delete and refetch Project
 const deleteProject = async id => {
-  //await projectListStore.deleteProject(id)
-  fetchProjects()
+  await projectListStore.deleteProject(id)
+  queryProjects()
 }
 
 // Functions Calls
@@ -260,6 +259,9 @@ watchEffect(queryProjects)
             <template #expanded-row="slotProps">
               <tr class="v-data-table__tr">
                 <td :colspan="headers.length">
+                  <p class="my-1">
+                    Manager: {{ slotProps.item.raw.project_members[0][0].project_member_name }}
+                  </p>
                   <p class="my-1">
                     Description: {{ slotProps.item.raw.project_description }}
                   </p>
