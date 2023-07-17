@@ -5,6 +5,7 @@ import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue'
 import CrmRecent from '@/views/dashboards/crm/CrmRecent.vue'
 import RessourceCard from '@/views/dashboards/crm/RessourceCard.vue'
 import CardStatsTrans from '@/views/pages/cards/card-statistics/CardStatsTrans.vue'
+import CardSales from '@/views/pages/cards/card-advance/CardSales.vue'
 
 
 
@@ -244,7 +245,7 @@ const userListMeta = [
   <section>
     <VRow>
       <VCol>
-        <CardStatsTrans />
+        <CardSales />
       </VCol>
       <!-- 👉 Horizontal Cards -->
       <VCol
@@ -311,7 +312,6 @@ const userListMeta = [
 
         <VWindow
           v-model="userTab"
-          class="mt-6 disable-tab-transition"
           :touch="false"
         >
           <VWindowItem>
