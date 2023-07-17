@@ -342,10 +342,7 @@ watchEffect(queryProjects)
 
                     <VDivider />
                     
-                    <VListItem
-                      disabled
-                      :to="{ name: 'apps-user-view-id', params: { id: item.raw.project_id } }"
-                    >
+                    <VListItem :to="{ name: 'apps-project-view-id', params: { id: item.raw.project_id } }">
                       <template #prepend>
                         <VIcon icon="tabler-file-arrow-right" />
                       </template>
