@@ -47,6 +47,20 @@ export function subStringNameForAvatar (name) {
   return split[0] + " " + split[1]
 }
 
+export function resolveProjectStatusVariantWithoutColor(stat) {
+  if (stat === 'Schedulled' || stat === 'SCHEDULED')
+    return 'Non Demarré'
+  if (stat === 'In Progress'|| stat === 'IN_PROGRESS')
+    return 'En Cours'
+  if (stat === 'Stopped' || stat === 'STOPPED')
+    return 'Suspendu'
+  if (stat === 'Finished' || stat === 'FINISHED')
+    return 'Terminé'
+  else {
+    return stat
+  }
+}
+
 export function getWorkDaysInMonth(dateString) {
   const date = new Date(dateString)
   const month = date.getMonth()
