@@ -3,6 +3,10 @@ import { BASE_URL } from '@projectConfig'
 import { defineStore } from 'pinia'
 
 export const useProjectListStore = defineStore('ProjectListStore', {
+  state: () => ({
+    projects: [],
+    project: null,
+  }),
   actions: {
     // 👉 Fetch Projects data
     fetchProjects() { return axios.get(`${BASE_URL}/projects`)},
@@ -26,6 +30,12 @@ export const useProjectListStore = defineStore('ProjectListStore', {
     fetchProject(id) {
       return new Promise((resolve, reject) => {
         axios.get(`${BASE_URL}/projects/${id}`).then(response => resolve(response)).catch(error => reject(error))
+      })
+    },
+
+    stateProject(id) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${BASE_URL}/projects/${id}`).then(response => this.project = response.data).catch(error => reject(error))
       })
     },
 

@@ -162,3 +162,19 @@ export function resolveXOFCurrencyFormat(xof){
     console.log(error.String)
   }
 }
+
+export const resolveProjectStatusVariant = stat => {
+  const statLowerCase = stat.toLowerCase()
+  if (statLowerCase === 'finished')
+    return { "color": "secondary", "status_name": "Terminé" }
+  if (statLowerCase === 'failed')
+    return { "color": "error", "status_name": "Echec" }
+  if (statLowerCase === 'on hold')
+    return { "color": "warning", "status_name": "Halt" }
+  if (statLowerCase === 'in progress')
+    return { "color": "success", "status_name": "En cours" }
+  if (statLowerCase === 'pending')
+    return { "color": "primary", "status_name": "En attente" }
+  
+  return { "color": "secondary", "status_name": "Statut inconnu" }
+}

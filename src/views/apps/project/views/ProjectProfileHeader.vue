@@ -1,5 +1,10 @@
 <script setup>
+import { resolveLocalDateVariantLong, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
+import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import axios from '@axios'
+
+const projectListStore = useProjectListStore()
+const project = projectListStore.project
 
 const profileHeaderData = ref()
 const knowledge = ref(57)
@@ -11,19 +16,20 @@ const fetchHeaderData = () => {
 }
 
 fetchHeaderData()
+console.log(project)
 </script>
 
 <template>
-  <VCard v-if="profileHeaderData">
+  <VCard v-if="project">
     <VCardText class="d-flex align-bottom flex-sm-row flex-column justify-center gap-x-5">
       <div class="user-profile-info w-100 mt-16 pt-6 pt-sm-0 mt-sm-0">
         <h6 class="text-h6 text-center text-sm-start mb-3">
-          {{ profileHeaderData?.fullName }}
+          {{ project?.project_title }}
         </h6>
 
         <VDivider class="mb-5" />
         <p class="text-sm">
-          Here stands the project description, Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis praesentium nesciunt aspernatur numquam ex reprehenderit architecto itaque fugit aperiam. Culpa ad aut quo, cumque libero pariatur doloremque dignissimos id quia.
+          {{ project.project_description }}
         </p>
         <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">
           <div class="d-flex flex-wrap justify-center justify-sm-start flex-grow-1 gap-2">
@@ -34,7 +40,7 @@ fetchHeaderData()
                 class="me-1"
               />
               <span class="text-body-1">
-                Al-Karid CISSE
+                {{ project.project_members[0][0].project_member_name }}
               </span>
             </span>
 
@@ -49,7 +55,7 @@ fetchHeaderData()
                 icon="tabler-building"
                 size="25"
               />
-              &nbsp; DSESP
+              &nbsp; {{ project.project_direction }}
             </VBtn>
                 
             <!-- ANCHOR - Start Date -->
@@ -62,7 +68,7 @@ fetchHeaderData()
                 icon="tabler-calendar"
                 size="25"
               />
-              &nbsp; 28 Jan. 2023
+              &nbsp; {{ resolveLocalDateVariantLong(project.project_start_date) }}
             </VBtn>
             
             <!-- ANCHOR - End Date -->
@@ -75,7 +81,7 @@ fetchHeaderData()
                 icon="tabler-calendar-due"
                 size="25"
               />
-              &nbsp; 1 Sept. 2023
+              &nbsp; {{ resolveLocalDateVariantLong(project.project_end_date) }}
             </VBtn>
             
             <!-- ANCHOR - Budget -->
@@ -88,21 +94,21 @@ fetchHeaderData()
                 icon="tabler-moneybag"
                 size="25"
               />
-              &nbsp;1 500 000 FCFA
+              &nbsp; {{ resolveXOFCurrencyFormat(project.project_budget) }}
             </VBtn>
           </div>
 
           <!-- ANCHOR - Status desplay -->
           <VBtn
-            color="error"
+            :color="resolveProjectStatusVariant(project.project_status).color"
             variant="outlined"
           >
             <VAvatar
-              color="error"
+              :color="resolveProjectStatusVariant(project.project_status).color"
               size="x-small"
             />
             <span>
-              &nbsp;&nbsp;&nbsp;Status
+              &nbsp;&nbsp;&nbsp; {{ resolveProjectStatusVariant(project.project_status).status_name }}
             </span>
           </VBtn>
         </div>

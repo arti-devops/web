@@ -8,6 +8,8 @@ import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
 const projectListStore = useProjectListStore()
 
+const selectedProject = projectListStore.project
+
 // CRUD and Page Variables
 const projects = ref([])
 const totalProjects =ref(0)
@@ -165,6 +167,11 @@ const updateProject = async projectData => {
 const deleteProject = async id => {
   await projectListStore.deleteProject(id)
   queryProjects()
+}
+
+const selectProject = id => {
+  projectListStore.stateProject(id)
+  console.log(projectListStore.project)
 }
 
 // Functions Calls
@@ -325,6 +332,7 @@ watchEffect(queryProjects)
                 variant="text"
                 size="small"
                 color="medium-emphasis"
+                @click="selectProject(item.raw.project_id)"
               >
                 <VIcon
                   size="24"
