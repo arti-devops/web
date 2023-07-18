@@ -58,8 +58,8 @@ const restructureProjectMembersData = () =>{
   pMembers.unshift(pManager)
 
   return pMembers.map(item => ({
-    project_member_fullname: item.title.trim(),
-    project_member_matricule: item.value,
+    project_member_name: item.title.trim(),
+    project_member_id: item.value,
     project_member_role: item.role,
   }))
 }
@@ -216,6 +216,7 @@ watchEffect((fetchMembersList))
               </VCol>
 
               <!-- 👉 Project Direction -->
+              <!-- TODO Add all directions -->
               <VCol cols="12">
                 <AppSelect
                   v-model="projectDirection"
