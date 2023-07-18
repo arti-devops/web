@@ -1,9 +1,9 @@
 <script setup>
 import ProjectProfileHeader from '@/views/apps/project/views/ProjectProfileHeader.vue'
+import ProjectTabResources from '@/views/apps/project/views/ProjectTabResources.vue'
 import ProjectTabTasks from '@/views/apps/project/views/ProjectTabTasks.vue'
 import { useUserListStore } from '@/views/apps/user/useUserListStore'
 
-import UserTabSecurity from '@/views/apps/user/view/UserTabSecurity.vue'
 
 const userListStore = useUserListStore()
 const route = useRoute()
@@ -16,7 +16,7 @@ const tabs = [
     title: 'Activités',
   },
   {
-    icon: 'tabler-lock',
+    icon: 'tabler-apps',
     title: 'Ressources',
   },
 ]
@@ -38,36 +38,52 @@ userListStore.fetchUser(Number(5)).then(response => {
       md="12"
       lg="12"
     >
-      <VTabs
-        v-model="userTab"
-        class="v-tabs-pill"
+      <VCard
+        title="Détails du Projet"
+        subtitle="02 activités du projet sont actuellement en cours"
       >
-        <VTab
-          v-for="tab in tabs"
-          :key="tab.icon"
+        <template #append>
+          <div class="mt-n4 me-n2">
+            <VBtn color="primary">
+              <VIcon
+                icon="tabler-subtask"
+                size="25"
+              />
+              &nbsp;Nouvelle Tâche
+            </VBtn>
+          </div>
+        </template>
+        <VTabs
+          v-model="userTab"
+          grow
         >
-          <VIcon
-            :size="18"
-            :icon="tab.icon"
-            class="me-1"
-          />
-          <span>{{ tab.title }}</span>
-        </VTab>
-      </VTabs>
+          <VTab
+            v-for="tab in tabs"
+            :key="tab.icon"
+          >
+            <VIcon
+              :size="18"
+              :icon="tab.icon"
+              class="me-1"
+            />
+            <span>{{ tab.title }}</span>
+          </VTab>
+        </VTabs>
 
-      <VWindow
-        v-model="userTab"
-        class="mt-6"
-        :touch="false"
-      >
-        <VWindowItem>
-          <ProjectTabTasks />
-        </VWindowItem>
+        <VWindow
+          v-model="userTab"
+          class="mt-6"
+          :touch="false"
+        >
+          <VWindowItem>
+            <ProjectTabTasks />
+          </VWindowItem>
 
-        <VWindowItem>
-          <UserTabSecurity />
-        </VWindowItem>
-      </VWindow>
+          <VWindowItem>
+            <ProjectTabResources />
+          </VWindowItem>
+        </VWindow>
+      </VCard>
     </VCol>
   </VRow>
 </template>

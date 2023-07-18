@@ -15,6 +15,7 @@ export default [
     icon: { icon: 'tabler-3d-cube-sphere' },
     children: [
       { title: 'Projets', to: 'apps-project-list' },
+      { title: 'Fiche Projet', to: { name: 'apps-project-view-id', params: { id: '5036' } }, hidden: true },
     ],
   },
 ]
