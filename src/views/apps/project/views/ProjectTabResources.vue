@@ -1,11 +1,14 @@
 <script setup>
-const open = ref(['Project'])
+import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 
-const stakeholders = ['Gren CISSE Al-Karid', 'KANDE Daouda', 'DRO Chris ']
+const projectListStore = useProjectListStore()
+const project = projectListStore.project
+
+const open = ref(['Project'])
 </script>
 
 <template>
-  <VRow>
+  <VRow v-if="project">
     <VCol cols="6">
       <VList v-model:opened="open">
         <VListGroup value="Project">
@@ -13,7 +16,7 @@ const stakeholders = ['Gren CISSE Al-Karid', 'KANDE Daouda', 'DRO Chris ']
             <VListItem
               v-bind="props"
               prepend-icon="tabler-subtask"
-              title="Projet : Remplacer cette ligne par le titre du projet actuel"
+              :title="project.project_title"
             />
           </template>
   
@@ -28,8 +31,8 @@ const stakeholders = ['Gren CISSE Al-Karid', 'KANDE Daouda', 'DRO Chris ']
             </template>
   
             <VListItem
-              value="Gren CISSE Al-Karid"
-              title="Gren CISSE Al-Karid"
+              :value="project.project_members[0][0].project_member_name"
+              :title="project.project_members[0][0].project_member_name"
               prepend-icon="tabler-user"
             />
           </VListGroup>
@@ -46,10 +49,10 @@ const stakeholders = ['Gren CISSE Al-Karid', 'KANDE Daouda', 'DRO Chris ']
             </template>
   
             <VListItem
-              v-for="(name, i) in stakeholders"
+              v-for="(m, i) in project.project_members"
               :key="i"
-              :value="name"
-              :title="name"
+              :value="m[0].project_member_name"
+              :title="m[0].project_member_name"
               prepend-icon="tabler-user"
             />
           </VListGroup>

@@ -1,12 +1,16 @@
 <script setup>
+import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import ProjectProfileHeader from '@/views/apps/project/views/ProjectProfileHeader.vue'
 import ProjectTabResources from '@/views/apps/project/views/ProjectTabResources.vue'
 import ProjectTabTasks from '@/views/apps/project/views/ProjectTabTasks.vue'
 import { useUserListStore } from '@/views/apps/user/useUserListStore'
 
 
+const projectListStore = useProjectListStore()
+const router = useRoute()
+
 const userListStore = useUserListStore()
-const route = useRoute()
+
 const userData = ref()
 const userTab = ref(null)
 

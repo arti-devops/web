@@ -1,123 +1,106 @@
 <script setup>
-const desserts = [
+import { resolveLocalDateVariantShort, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
+import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
+
+import { VDataTable } from 'vuetify/labs/VDataTable'
+
+const projectListStore = useProjectListStore()
+const project = projectListStore.project
+const tasks = ref(null)
+
+if (project.project_tasks) {
+  tasks.value = project.project_tasks.flat() 
+}
+
+console.log(tasks)
+
+const tasksHeader = [
   {
-    dessert: 'Frozen Yogurt',
-    calories: "Gren CISSE",
-    fat: "2023-05-09",
-    carbs: "2023-06-04",
-    protein: "Echec",
-    budget: 150000,
-    color: "primary",
+    title: '',
+    key: 'data-table-expand',
   },
   {
-    dessert: 'Ice cream sandwich',
-    calories: "Alexy SANO",
-    fat: "2023-06-04",
-    carbs: "2023-06-04",
-    protein: "En cours",
-    budget: 10000,
-    color: "error",
+    title: 'Activité',
+    key: 'project_task_title',
   },
   {
-    dessert: 'Eclair',
-    calories: "Dorcas Marine",
-    fat: "2023-06-04",
-    carbs: "2023-06-04",
-    protein: "En cours",
-    budget: 960650,
-    color: "primary",
+    title: 'Responsable',
+    key: 'project_task_manager',
   },
   {
-    dessert: 'Cupcake',
-    calories: "Solange De LaForge",
-    fat: "2023-06-04",
-    carbs: "2023-06-04",
-    protein: "Terminé",
-    budget: 3148250,
-    color: "success",
+    title: 'Début',
+    key: 'project_task_start_date',
   },
   {
-    dessert: 'Gingerbread',
-    calories: "Sahiri Daniel",
-    fat: "2023-06-04",
-    carbs: "2023-06-04",
-    protein: "Terminé",
-    budget: 75506,
-    color: "warning",
+    title: 'Fin',
+    key: 'project_task_end_date',
+  },
+  {
+    title: 'Status',
+    key: 'project_task_status',
+  },
+  {
+    title: 'Actions',
+    key: 'actions',
+    sortable: false,
   },
 ]
 </script>
 
 <template>
-  <VTable class="text-no-wrap">
-    <thead>
-      <tr>
-        <th class="text-uppercase">
-          Desserts(100g Servings)
-        </th>
-        <th class="text-uppercase">
-          Responsable
-        </th>
-        <th class="text-uppercase">
-          Début
-        </th>
-        <th class="text-uppercase">
-          Fin
-        </th>
-        <th class="text-uppercase">
-          Status
-        </th>
-        <th class="text-uppercase text-right">
-          Budget
-        </th>
-        <th class="text-uppercase text-center">
-          Actions
-        </th>
-      </tr>
-    </thead>
+  <VRow>
+    <VCol
+      v-if="tasks"
+      cols="12"
+    >
+      <!-- 👉 Recent devices -->
 
-    <tbody>
-      <tr
-        v-for="item in desserts"
-        :key="item.dessert"
+      <VDataTable
+        :items="tasks"
+        :headers="tasksHeader"
+        hide-default-footer
+        expand-on-click
       >
-        <td>
+        <!-- Expanded Row Data -->
+        <template #expanded-row="slotProps">
+          <tr class="v-data-table__tr">
+            <td :colspan="tasksHeader.length">
+              <p class="my-1">
+                Budget: {{ resolveXOFCurrencyFormat(slotProps.item.raw.project_task_budget ) }}
+              </p>
+              <p class="my-1">
+                Description: {{ slotProps.item.raw.project_task_description }}
+              </p>
+            </td>
+          </tr>
+        </template>
+        
+        <template #item.project_task_start_date="{ item }">
+          {{ resolveLocalDateVariantShort(item.raw.project_task_start_date) }}
+        </template>
+
+        <template #item.project_task_end_date="{ item }">
+          {{ resolveLocalDateVariantShort(item.raw.project_task_end_date) }}
+        </template>
+
+        <template #item.project_task_budget="{ item }">
+          {{ resolveXOFCurrencyFormat(item.raw.project_task_budget) }}
+        </template>
+        
+        <template #item.project_task_status="{ item }">
+          <!-- ANCHOR - Status desplay -->
           <VAvatar
-            size="30"
-            color="primary"
-            variant="tonal"
-          >
-            <VIcon
-              size="20"
-              icon="tabler-archive"
-            />
-          </VAvatar>
-          {{ item.dessert }}
-        </td>
-        <td>
-          {{ item.calories }}
-        </td>
-        <td>
-          {{ item.fat }}
-        </td>
-        <td>
-          {{ item.carbs }}
-        </td>
-        <td>
-          <VAvatar
-            :color="item.color"
-            size="20"
+            :color="resolveProjectStatusVariant(item.raw.project_task_status).color"
+            size="17"
           />
           <span>
-            En cours
+            &nbsp;{{ resolveProjectStatusVariant(item.raw.project_task_status).status_name }}
           </span>
-        </td>
-        <td class="text-right">
-          {{ item.budget }} FCFA
-        </td>
-        <td class="text-center">
-          <!-- Actions -->
-          
+        </template>
+        
+        
+        <!-- ANCHOR Actions -->
+        <template #item.actions="{ item }">
           <VBtn
             icon
             variant="text"
@@ -147,8 +130,10 @@ const desserts = [
               </VList>
             </VMenu>
           </VBtn>
-        </td>
-      </tr>
-    </tbody>
-  </VTable>
+        </template>
+        <!-- TODO Refactor this after vuetify provides proper solution for removing default footer -->
+        <template #bottom />
+      </VDataTable>
+    </VCol>
+  </VRow>
 </template>

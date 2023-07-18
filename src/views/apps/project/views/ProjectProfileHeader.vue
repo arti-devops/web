@@ -7,7 +7,6 @@ const projectListStore = useProjectListStore()
 const project = projectListStore.project
 
 const profileHeaderData = ref()
-const knowledge = ref(57)
 
 const fetchHeaderData = () => {
   axios.get('/pages/profile-header').then(response => {
@@ -105,7 +104,7 @@ console.log(project)
           >
             <VAvatar
               :color="resolveProjectStatusVariant(project.project_status).color"
-              size="x-small"
+              size="17"
             />
             <span>
               &nbsp;&nbsp;&nbsp; {{ resolveProjectStatusVariant(project.project_status).status_name }}

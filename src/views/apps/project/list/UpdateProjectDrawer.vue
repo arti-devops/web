@@ -126,7 +126,7 @@ watchEffect(fillVaiables)
                   :items="[{title:'Non démarré',value:'PENDING'},
                            {title:'En cours', value:'IN PROGRESS'},
                            {title:'Terminé', value:'FINISHED'},
-                           {title:'Suspendu', value:'SUSPENDED'},
+                           {title:'Suspendu', value:'ON HOLD'},
                            {title:'Echec', value:'FAILED'}]"
                 />
               </VCol>
