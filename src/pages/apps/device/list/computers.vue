@@ -1,21 +1,10 @@
 <script setup>
 import { paginationMeta } from '@/@fake-db/utils'
-import AddNewPrinterDrawer from '@/views/apps/device/list/AddNewPrinterDrawer.vue'
-import UpdatePrinterDrawer from '@/views/apps/device/list/UpdatePrinterDrawer.vue'
+import AddNewComputerDrawer from '@/views/apps/device/list/AddNewComputerDrawer.vue'
+import UpdateComputerDrawer from '@/views/apps/device/list/UpdateComputerDrawer.vue'
 import { useDeviceListStore } from '@/views/apps/device/useDeviceListStore'
 import avatar1 from '@images/avatars/avatar-1.png'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
-
-const deviceListStore = useDeviceListStore()
-
-const totalPage = ref(1)
-const searchQuery = ref('')
-const selectedBrand = ref('')
-const selectedStatus = ref('')
-const deviceToUpdate = ref({})
-
-const totalDevices = ref(0)
-const devices = ref([])
 
 const options = ref({
   page: 1,
@@ -25,14 +14,35 @@ const options = ref({
   search: undefined,
 })
 
-// Headers
+// SECTION Variables
+
+const totalPage = ref(1)
+const searchQuery = ref('')
+const selectedType = ref('COMPUTER')
+const selectedBrand = ref('')
+const selectedStatus = ref('')
+const deviceToUpdate = ref({})
+
+const devices = ref([])
+const totalDevices = ref(0)
+
+const isUpdateDrawerVisible = ref(false)
+const isAddNewUserDrawerVisible = ref(false)
+
+const deviceListStore = useDeviceListStore()
+
+// !SECTION
+
+// SECTION List varialbes
+
+//👉 - Table Headers
 const headers = [
   { title: '', 
     key: 'data-table-expand',
   },
   {
-    title: 'Imprimante',
-    key: 'device_hostname',
+    title: 'Ordinateur',
+    key: 'device_name',
   },
   {
     title: 'Marque',
@@ -43,8 +53,8 @@ const headers = [
     key: 'device_ip_address',
   },
   {
-    title: 'Mode',
-    key: 'device_connexion_mode',
+    title: 'Bénéficiaire',
+    key: 'device_user',
   },
   {
     title: 'Statut',
@@ -57,22 +67,20 @@ const headers = [
   },
 ]
 
-const fetchDevices = () => {
-  deviceListStore.fetchDevices({
-    q: searchQuery.value,
-    dtype: "IMPRIMANTE",
-    status: selectedStatus.value,
-    brand: selectedBrand.value,
-    options: options.value,
-  }).then( response => {
-    devices.value = response.data.devices
-    totalPage.value = response.data.totalPages
-    totalDevices.value = response.data.totalDevices
-    options.value.page = response.data.page
-  }).catch(error => { console.log(error)})
-}
-
-watchEffect(fetchDevices)
+const device_type = [
+  {
+    title: 'Tous',
+    value: 'COMPUTER',
+  },
+  {
+    title: 'PC',
+    value: 'COMPUTER-LAPTOP',
+  },
+  {
+    title: 'Bureau',
+    value: 'COMPUTER-DESKTOP',
+  },
+]
 
 const brands = [
   {
@@ -80,8 +88,8 @@ const brands = [
     value: 'hp',
   },
   {
-    title: 'Canon',
-    value: 'canon',
+    title: 'Lenovo',
+    value: 'lenovo',
   },
 ]
 
@@ -96,17 +104,36 @@ const status = [
   },
 ]
 
+// !SECTION
+
+// SECTION Functions and Resolvers
+
+const fetchDevices = () => {
+  deviceListStore.fetchDevices({
+    q: searchQuery.value,
+    dtype: selectedType.value? selectedType.value : "COMPUTER",
+    status: selectedStatus.value,
+    brand: selectedBrand.value,
+    options: options.value,
+  }).then( response => {
+    devices.value = response.data.devices
+    totalPage.value = response.data.totalPages
+    totalDevices.value = response.data.totalDevices
+    options.value.page = response.data.page
+  }).catch(error => { console.log(error)})
+}
+
 const resolveDeviceTypeVariant = dtype => {
   const roleLowerCase = dtype.toLowerCase()
-  if (roleLowerCase === 'telephone ip')
+  if (roleLowerCase === 'computer-laptop')
+    return {
+      color: '#9C1874',
+      icon: 'tabler-device-laptop',
+    }
+  if (roleLowerCase === 'computer-desktop')
     return {
       color: 'primary',
-      icon: 'tabler-device-landline-phone',
-    }
-  if (roleLowerCase === 'imprimante')
-    return {
-      color: '#8B1874',
-      icon: 'tabler-printer',
+      icon: 'tabler-device-desktop',
     }
   
   return {
@@ -137,16 +164,13 @@ const resolveDeviceConnexionModeVariant = stat => {
   return { status: 'Statut inconnu', color: 'secondary' }
 }
 
-const isAddNewUserDrawerVisible = ref(false)
-const isUpdateDrawerVisible = ref(false)
-
 // Add and refetch Device
 const addNewDevice = async deviceData => {
   await deviceListStore.addDevice(deviceData)
   fetchDevices()
 }
 
-// Updqte and refresh Device
+// Update and refresh Device
 const updateDeviceTrigger = deviceId => {
   deviceListStore.fetchDevice(deviceId).then(response => {
     deviceToUpdate.value = response.data
@@ -164,13 +188,20 @@ const deleteDevice = async id => {
   await deviceListStore.deleteDevice(id)
   fetchDevices()
 }
+
+//!SECTION
+
+//SECTION Function calls
+watchEffect(fetchDevices)
+
+//!SECTION
 </script>
 
 <template>
   <section>
     <VRow>
       <VCol cols="12">
-        <VCard title="Liste des IMPRIMANTES">
+        <VCard title="Liste des ORDINATEURS">
           <VDivider />
 
           <VCardText class="d-flex flex-wrap py-4 gap-4">
@@ -185,6 +216,15 @@ const deleteDevice = async id => {
                 ]"
                 style="width: 6.25rem;"
                 @update:model-value="options.itemsPerPage = parseInt($event, 10)"
+              />
+
+              <!-- 👉 Select Computer type -->
+              <AppSelect
+                v-model="selectedType"
+                :items="device_type"
+                model-value="Type"
+                clearable
+                clear-icon="tabler-x"
               />
 
               <!-- 👉 Select Brand -->
@@ -232,14 +272,14 @@ const deleteDevice = async id => {
                 prepend-icon="tabler-square-rounded-plus-filled"
                 @click="isAddNewUserDrawerVisible = true"
               >
-                Imprimante
+                Ordinateur
               </VBtn>
             </div>
           </VCardText>
-
+              
           <VDivider />
-
-          <!-- SECTION datatable -->
+              
+          <!-- 👉 Datatable -->
           <VDataTableServer
             v-model:items-per-page="options.itemsPerPage"
             v-model:page="options.page"
@@ -253,9 +293,6 @@ const deleteDevice = async id => {
             <template #expanded-row="slotProps">
               <tr class="v-data-table__tr">
                 <td :colspan="headers.length">
-                  <p class="my-1">
-                    Nom: {{ slotProps.item.raw.device_name }}
-                  </p>
                   <p class="my-1">
                     Modèle: {{ slotProps.item.raw.device_brand_model }}
                   </p>
@@ -468,12 +505,14 @@ const deleteDevice = async id => {
           <!-- SECTION -->
         </VCard>
 
-        <!-- 👉 Add New User -->
-        <AddNewPrinterDrawer
+        <!-- 👉 Add New Computer -->
+        <AddNewComputerDrawer
           v-model:isDrawerOpen="isAddNewUserDrawerVisible"
           @user-data="addNewDevice"
         />
-        <UpdatePrinterDrawer
+
+        <!-- 👉 Update Computer -->
+        <UpdateComputerDrawer
           v-model:isDrawerOpen="isUpdateDrawerVisible"
           :device-to-update="deviceToUpdate"
           @device-data="updateDevice"

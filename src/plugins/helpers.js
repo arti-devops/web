@@ -36,15 +36,29 @@ export function resolveLocalDateVariantLong (d) {
 
 export function resolveLocalDateVariantShort (d) {
   const date = new Date(d)
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  const options = { year: 'numeric', month: 'short', day: '2-digit' }
   
-  return date.toLocaleDateString('en-US', options)
+  return date.toLocaleDateString('fr-FR', options)
 }
 
 export function subStringNameForAvatar (name) {
   let split = name.split(" ", 2)
   
   return split[0] + " " + split[1]
+}
+
+export function resolveProjectStatusVariantWithoutColor(stat) {
+  if (stat === 'Schedulled' || stat === 'SCHEDULED')
+    return 'Non Demarré'
+  if (stat === 'In Progress'|| stat === 'IN_PROGRESS')
+    return 'En Cours'
+  if (stat === 'Stopped' || stat === 'STOPPED')
+    return 'Suspendu'
+  if (stat === 'Finished' || stat === 'FINISHED')
+    return 'Terminé'
+  else {
+    return stat
+  }
 }
 
 export function getWorkDaysInMonth(dateString) {
@@ -139,4 +153,28 @@ export function sortObjectsByCheckIn(array) {
     
     return 0
   })
+}
+
+export function resolveXOFCurrencyFormat(xof){
+  try {
+    return xof.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF' })
+  } catch (error) {
+    console.log(error.String)
+  }
+}
+
+export const resolveProjectStatusVariant = stat => {
+  const statLowerCase = stat.toLowerCase()
+  if (statLowerCase === 'finished')
+    return { "color": "secondary", "status_name": "Terminé" }
+  if (statLowerCase === 'failed')
+    return { "color": "error", "status_name": "Echec" }
+  if (statLowerCase === 'on hold')
+    return { "color": "warning", "status_name": "Halt" }
+  if (statLowerCase === 'in progress')
+    return { "color": "success", "status_name": "En cours" }
+  if (statLowerCase === 'pending')
+    return { "color": "primary", "status_name": "En attente" }
+  
+  return { "color": "secondary", "status_name": "Statut inconnu" }
 }

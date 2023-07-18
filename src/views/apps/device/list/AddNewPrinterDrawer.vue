@@ -19,19 +19,18 @@ const emit = defineEmits([
 const isFormValid = ref(false)
 const refForm = ref()
 
+const deviceName = ref('Color LaserJet Pro')
 const deviceUser = ref('Al-Karid')
-const devicePostNumber = ref(999)
-const deviceStatus = ref("OFFLINE")
-const deviceBrandModel = ref('T33G')
-const deviceType = ref('TELEPHONE IP')
-const deviceBrandName = ref('Yealink')
-const deviceSerialNumber = ref("VNC0015KL")
-const deviceIPAddress = ref("192.168.0.220")
-
+const deviceType = ref('IMPRIMANTE')
 const deviceLogin = ref("DEFAULT")
+const deviceStatus = ref("OFFLINE")
+const deviceHostname = ref("IP-DSE")
 const devicePassword = ref("DEFAULT")
+const deviceIPAddress = ref("192.168.0.220")
+const deviceBrandName = ref('HP')
+const deviceBrandModel = ref('MFP183fw')
+const deviceSerialNumber = ref("VNC0015KL")
 const deviceConnexionMode = ref("CABLE")
-const deviceHostname = ref("hostname.local")
 
 // 👉 drawer close
 const closeNavigationDrawer = () => {
@@ -48,17 +47,16 @@ const onSubmit = () => {
       emit('userData', {
         device_user: deviceUser.value,
         device_type: deviceType.value,
+        device_name: deviceName.value,
+        device_login: deviceLogin.value,
         device_status: deviceStatus.value,
+        device_hostname: deviceHostname.value,
+        device_password: devicePassword.value,
         device_ip_address: deviceIPAddress.value,
         device_brand_name: deviceBrandName.value,
         device_brand_model: deviceBrandModel.value,
-        device_post_number: devicePostNumber.value,
         device_serial_number: deviceSerialNumber.value,
-
-        device_login: deviceLogin.value,
-        device_hostname: deviceHostname.value,
-        device_password: devicePassword.value,      
-        device_connexion_mode: deviceConnexionMode.value,      
+        device_connexion_mode: deviceConnexionMode.value,
       })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
@@ -85,7 +83,7 @@ const handleDrawerModelValueUpdate = val => {
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Nouveau Téléphone"
+      title="Nouvel Imprimante"
       @cancel="closeNavigationDrawer"
     />
 
@@ -106,13 +104,22 @@ const handleDrawerModelValueUpdate = val => {
                 <AppSelect
                   v-model="deviceType"
                   :rules="[requiredValidator]"
-                  model-value="TELEPHONE IP"
+                  model-value="IMPRIMANTE"
                   label="Type de l'équipement"
-                  :items="['TELEPHONE IP']"
+                  :items="['IMPRIMANTE']"
                   disabled
                 />
               </VCol>
               
+              <!-- 👉 Device Name -->
+              <VCol cols="12">
+                <AppTextField
+                  v-model="deviceName"
+                  :rules="[requiredValidator]"
+                  label="Mom de l'imprimante"
+                />
+              </VCol>
+
               <!-- 👉 Device Serial Number -->
               <VCol cols="12">
                 <AppTextField
@@ -128,7 +135,7 @@ const handleDrawerModelValueUpdate = val => {
                   v-model="deviceBrandName"
                   :rules="[requiredValidator]"
                   label="Marque"
-                  :items="['Yealink','Grandstream']"
+                  :items="['HP','Canon','Xerox']"
                 />
               </VCol>
 
@@ -141,21 +148,20 @@ const handleDrawerModelValueUpdate = val => {
                 />
               </VCol>
 
-              <!-- 👉 Post Number -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="devicePostNumber"
-                  :rules="[requiredValidator]"
-                  label="Numéro de poste"
-                />
-              </VCol>
-
               <!-- 👉 IP Address -->
               <VCol cols="12">
                 <AppTextField
                   v-model="deviceIPAddress"
-                  :rules="[requiredValidator]"
                   label="Addresse IP"
+                />
+              </VCol>
+
+              <!-- 👉 Connexion Mode -->
+              <VCol cols="12">
+                <AppSelect
+                  v-model="deviceConnexionMode"
+                  label="Mode de connexion"
+                  :items="[{title:'Cable',value:'ETHERNET'},{title:'WIFI',value:'WIFI'},{title:'USB',value:'USB'},]"
                 />
               </VCol>
 

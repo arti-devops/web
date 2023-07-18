@@ -22,6 +22,7 @@ function fetchDailyLog() {
 
 function updateData() {
   fetchDailyLog()
+  dlog.value = null
   bus.emit(selectedDate.value)
 }
 

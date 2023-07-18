@@ -1,6 +1,6 @@
 import axios from '@axios'
-import { defineStore } from 'pinia'
 import { BASE_URL } from '@projectConfig'
+import { defineStore } from 'pinia'
 
 export const useDeviceListStore = defineStore('DeviceListStore', {
   actions: {
@@ -12,7 +12,7 @@ export const useDeviceListStore = defineStore('DeviceListStore', {
     // 👉 Add New Device
     addDevice(deviceData) {
       return new Promise((resolve, reject) => {
-        axios.post(BASE_URL, {
+        axios.post(`${BASE_URL}/devices`, {
           device: deviceData,
         }).then(response => resolve(response))
           .catch(error => reject(error))

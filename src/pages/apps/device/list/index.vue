@@ -27,12 +27,15 @@ const options = ref({
 
 // Headers
 const headers = [
+  { title: '', 
+    key: 'data-table-expand',
+  },
   {
     title: 'Marque',
     key: 'device_brand_name',
   },
   {
-    title: 'N Poste',
+    title: 'N° Poste',
     key: 'device_post_number',
   },
   {
@@ -44,7 +47,7 @@ const headers = [
     key: 'device_user',
   },
   {
-    title: 'Status',
+    title: 'Statut',
     key: 'device_status',
   },
   {
@@ -84,7 +87,7 @@ const brands = [
 
 const status = [
   {
-    title: 'Connecté',
+    title: 'En ligne',
     value: 'ONLINE',
   },
   {
@@ -112,14 +115,14 @@ const resolveDeviceTypeVariant = dtype => {
   }
 }
 
-const resolveStatusStatusVariant = stat => {
+const resolveDeviceStatusVariant = stat => {
   const statLowerCase = stat.toLowerCase()
   if (statLowerCase === 'online')
-    return 'success'
+    return { status: 'En ligne', color: 'success' }
   if (statLowerCase === 'offline')
-    return 'error'
-  
-  return 'primary'
+    return { status: 'Hors ligne', color: 'error' }
+    
+  return { status: 'Statut inconnu', color: 'secondary' }
 }
 
 const isAddNewUserDrawerVisible = ref(false)
@@ -134,7 +137,6 @@ const addNewDevice = async deviceData => {
 // Updqte and refresh Device
 const updateDeviceTrigger = deviceId => {
   deviceListStore.fetchDevice(deviceId).then(response => {
-    console.log(response.data)
     deviceToUpdate.value = response.data
     isUpdateDrawerVisible.value = true
   })
@@ -156,43 +158,14 @@ const deleteDevice = async id => {
   <section>
     <VRow>
       <VCol cols="12">
-        <VCard title="Liste des TELEPHONES IP">
+        <VCard title="Liste des TELEPHONES">
           <!-- 👉 Filters -->
-          <VCardText>
-            <VRow>
-              <!-- 👉 Select Brand -->
-              <VCol
-                cols="12"
-                sm="4"
-              >
-                <AppSelect
-                  v-model="selectedBrand"
-                  label="Filtrer par Marque"
-                  :items="brands"
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-              <!-- 👉 Select Status -->
-              <VCol
-                cols="12"
-                sm="4"
-              >
-                <AppSelect
-                  v-model="selectedStatus"
-                  label="Filtrer par Status"
-                  :items="status"
-                  clearable
-                  clear-icon="tabler-x"
-                />
-              </VCol>
-            </VRow>
-          </VCardText>
 
           <VDivider />
 
           <VCardText class="d-flex flex-wrap py-4 gap-4">
             <div class="me-3 d-flex gap-3">
+              <!-- 👉 Select Display Size  -->
               <AppSelect
                 :model-value="options.itemsPerPage"
                 :items="[
@@ -205,6 +178,24 @@ const deleteDevice = async id => {
                 @update:model-value="options.itemsPerPage = parseInt($event, 10)"
               />
             </div>
+            
+            <!-- 👉 Select Brand -->
+            <AppSelect
+              v-model="selectedBrand"
+              :items="brands"
+              model-value="Marque"
+              clearable
+              clear-icon="tabler-x"
+            />
+
+            <!-- 👉 Select Status -->
+            <AppSelect
+              v-model="selectedStatus"
+              :items="status"
+              model-value="Statut"
+              clearable
+              clear-icon="tabler-x"
+            />
             <VSpacer />
 
             <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
@@ -229,10 +220,10 @@ const deleteDevice = async id => {
 
               <!-- 👉 Add user button -->
               <VBtn
-                prepend-icon="tabler-plus"
+                prepend-icon="tabler-square-rounded-plus-filled"
                 @click="isAddNewUserDrawerVisible = true"
               >
-                Nouveau Tél. IP
+                Téléphone
               </VBtn>
             </div>
           </VCardText>
@@ -247,8 +238,31 @@ const deleteDevice = async id => {
             :items-length="totalDevices"
             :headers="headers"
             class="text-no-wrap"
+            expend-on-click
             @update:options="options = $event"
           >
+            <template #expanded-row="slotProps">
+              <tr class="v-data-table__tr">
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Modèle: {{ slotProps.item.raw.device_brand_model }}
+                  </p>
+                  <p class="my-1">
+                    Mode : {{ slotProps.item.raw.device_connexion_mode }}
+                  </p>
+                </td>
+              </tr>
+              <tr class="v-data-table__tr">
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Login: {{ slotProps.item.raw.device_login }}
+                  </p>
+                  <p class="my-1">
+                    Password: {{ slotProps.item.raw.device_password }}
+                  </p>
+                </td>
+              </tr>
+            </template>
             <!-- Device User -->
             <template #item.deviceUser="{ item }">
               <div class="d-flex align-center">
@@ -294,12 +308,12 @@ const deleteDevice = async id => {
             <!-- 👉 Status -->
             <template #item.device_status="{ item }">
               <VChip
-                :color="resolveStatusStatusVariant(item.raw.device_status)"
+                :color="resolveDeviceStatusVariant(item.raw.device_status).color"
                 size="small"
                 label
                 class="text-capitalize"
               >
-                {{ item.raw.device_status }}
+                {{ resolveDeviceStatusVariant(item.raw.device_status).status }}
               </VChip>
             </template>
 
@@ -338,21 +352,21 @@ const deleteDevice = async id => {
                         <VIcon icon="tabler-file-arrow-right" />
                       </template>
 
-                      <VListItemTitle>View</VListItemTitle>
+                      <VListItemTitle>Voir</VListItemTitle>
                     </VListItem>
 
                     <VListItem @click="updateDeviceTrigger(item.raw.device_id)">
                       <template #prepend>
                         <VIcon icon="tabler-edit" />
                       </template>
-                      <VListItemTitle>Edit</VListItemTitle>
+                      <VListItemTitle>Modifier</VListItemTitle>
                     </VListItem>
 
                     <VListItem @click="deleteDevice(item.raw.device_id)">
                       <template #prepend>
                         <VIcon icon="tabler-trash" />
                       </template>
-                      <VListItemTitle>Delete</VListItemTitle>
+                      <VListItemTitle>Supprimer</VListItemTitle>
                     </VListItem>
                   </VList>
                 </VMenu>
