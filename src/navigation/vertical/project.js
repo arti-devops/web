@@ -1,6 +1,11 @@
 export default [
   { heading: 'Suivi & Evaluation' },
   {
+    title: 'Liste du personnel',
+    to: 'apps-user-list',
+    icon: { icon: 'tabler-users' },
+  },
+  {
     title: 'Absentéisme',
     icon: { icon: 'tabler-run' },
     children: [
