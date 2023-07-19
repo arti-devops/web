@@ -1,5 +1,5 @@
 <script setup>
-import { resolveLocalDateVariantLong, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
+import { resolveLocalDateVariantShort, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import axios from '@axios'
 
@@ -76,7 +76,7 @@ console.log(project)
                 icon="tabler-calendar"
                 size="25"
               />
-              &nbsp; {{ resolveLocalDateVariantLong(project.project_start_date) }}
+              &nbsp; {{ resolveLocalDateVariantShort(project.project_start_date) }}
             </VBtn>
             
             <!-- ANCHOR - End Date -->
@@ -89,7 +89,7 @@ console.log(project)
                 icon="tabler-calendar-due"
                 size="25"
               />
-              &nbsp; {{ resolveLocalDateVariantLong(project.project_end_date) }}
+              &nbsp; {{ resolveLocalDateVariantShort(project.project_end_date) }}
             </VBtn>
             
             <!-- ANCHOR - Budget -->
@@ -116,7 +116,7 @@ console.log(project)
               size="17"
             />
             <span>
-              &nbsp;&nbsp;&nbsp; {{ resolveProjectStatusVariant(project.project_status).status_name }}
+              &nbsp; {{ resolveProjectStatusVariant(project.project_status).status_name }}
             </span>
           </VBtn>
         </div>
