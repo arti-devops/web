@@ -1,12 +1,33 @@
 <script setup>
 import { resolveLocalDateVariantShort, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
+import UpdateTaskDrawer from '@/views/apps/project/list/UpdateTaskDrawer.vue'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
-
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
 const projectListStore = useProjectListStore()
 const project = projectListStore.project
 const tasks = ref(null)
+
+// CRUD and Page Variables
+
+const projectToUpdate = ref({})
+const isUpdateDrawerVisible = ref(false)
+
+// const isUpdateTaskVisible = ref(false)
+
+// Update and refresh Project
+const updateProjectTrigger = projectId => {
+  // projectListStore.fetchProject(projectId).then(response => {
+  //   console.log(response.data)
+  //   projectToUpdate.value = response.data
+  // })
+  isUpdateDrawerVisible.value = true // Déplacez cette ligne ici
+}
+
+const updateProject = async projectData => {
+  await projectListStore.updateProject(projectData)
+  queryProjects()
+}
 
 if (project.project_tasks) {
   tasks.value = project.project_tasks.flat() 
@@ -114,18 +135,11 @@ const tasksHeader = [
 
             <VMenu activator="parent">
               <VList>
-                <VListItem>
+                <VListItem @click="updateProjectTrigger(item.raw.project_task_id)">
                   <template #prepend>
                     <VIcon icon="tabler-edit" />
                   </template>
                   <VListItemTitle>Modifier</VListItemTitle>
-                </VListItem>
-
-                <VListItem>
-                  <template #prepend>
-                    <VIcon icon="tabler-trash" />
-                  </template>
-                  <VListItemTitle>Supprimer</VListItemTitle>
                 </VListItem>
               </VList>
             </VMenu>
@@ -134,6 +148,13 @@ const tasksHeader = [
         <!-- TODO Refactor this after vuetify provides proper solution for removing default footer -->
         <template #bottom />
       </VDataTable>
+      <UpdateTaskDrawer
+        v-model:isDrawerOpen="isUpdateDrawerVisible"
+        :project-to-update="projectToUpdate"
+        @project-data="updateProject"
+      />
     </VCol>
   </VRow>
 </template>
+
+      

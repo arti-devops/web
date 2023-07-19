@@ -1,9 +1,23 @@
 <script setup>
+import AddNewTask from '@/views/apps/project/list/AddNewTask.vue'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import ProjectProfileHeader from '@/views/apps/project/views/ProjectProfileHeader.vue'
 import ProjectTabResources from '@/views/apps/project/views/ProjectTabResources.vue'
 import ProjectTabTasks from '@/views/apps/project/views/ProjectTabTasks.vue'
 import { useUserListStore } from '@/views/apps/user/useUserListStore'
+
+
+
+const isAddNewTaskVisible = ref(false)
+
+
+// Add and refetch Project
+const addNewProject = async projectData => {
+  console.log(projectData)
+
+  await projectListStore.addProject(projectData)
+  queryProjects()
+}
 
 
 const projectListStore = useProjectListStore()
@@ -48,7 +62,10 @@ userListStore.fetchUser(Number(5)).then(response => {
       >
         <template #append>
           <div class="mt-n4 me-n2">
-            <VBtn color="primary">
+            <VBtn 
+              color="primary"
+              @click="isAddNewTaskVisible = true"
+            >
               <VIcon
                 icon="tabler-subtask"
                 size="25"
@@ -88,6 +105,10 @@ userListStore.fetchUser(Number(5)).then(response => {
           </VWindowItem>
         </VWindow>
       </VCard>
+      <AddNewTask
+        v-model:isDrawerOpen="isAddNewTaskVisible"
+        @project-data="addNewProject"
+      />
     </VCol>
   </VRow>
 </template>
