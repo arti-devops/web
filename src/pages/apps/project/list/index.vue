@@ -46,14 +46,17 @@ const headers = [
   {
     title: 'Début',
     key: 'project_start_date',
+    align: 'end',
   },
   {
     title: 'Fin',
     key: 'project_end_date',
+    align: 'end',
   },
   {
     title: 'Budget',
     key: 'project_budget',
+    align: 'end',
   },
   {
     title: 'Statut',
