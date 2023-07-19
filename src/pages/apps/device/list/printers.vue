@@ -335,7 +335,7 @@ watchEffect(d)
               </div>
             </template>
 
-            <!-- 👉 Device Type -->
+            <!-- 👉 Device Hostname -->
             <template #item.device_hostname="{ item }">
               <div class="d-flex align-center gap-4">
                 <VAvatar
@@ -348,7 +348,13 @@ watchEffect(d)
                     :icon="resolveDeviceTypeVariant(item.raw.device_type).icon"
                   />
                 </VAvatar>
-                <span class="text-capitalize">{{ item.raw.device_hostname }}</span>
+                <div class="d-flex flex-column">
+                  <span class="text-capitalize">{{ item.raw.device_hostname }}</span>
+                  <span
+                    class="text-sm"
+                    style="font-size: 11px;"
+                  >@{{ item.raw.device_user }}</span>
+                </div>
               </div>
             </template>
 
