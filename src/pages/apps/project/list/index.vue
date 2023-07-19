@@ -1,6 +1,6 @@
 <script setup>
 import { paginationMeta } from '@/@fake-db/utils'
-import { resolveLocalDateVariantShort, resolveXOFCurrencyFormat } from '@/plugins/helpers'
+import { resolveLocalDateVariantShort, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
 import AddNewProjectDrawer from '@/views/apps/project/list/AddNewProjectDrawer.vue'
 import UpdateProjectDrawer from '@/views/apps/project/list/UpdateProjectDrawer.vue'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
@@ -29,8 +29,8 @@ const options = ref({
   search: undefined,
 })
 
-// Table Headers
-
+// 👉 SECTION - Table headers
+// Table Headerr
 const headers = [
   { title: '', 
     key: 'data-table-expand',
@@ -38,6 +38,8 @@ const headers = [
   {
     title: 'Projet',
     key: 'project_title',
+    width: 120,
+    maxWidth: 120,
   },
   {
     title: 'Direction',
@@ -121,22 +123,6 @@ const queryProjects = () => {
     totalProjects.value = response.data.totalProjects
     options.value.page = response.data.page
   }).catch(error => { console.log(error)})
-}
-
-const resolveStatusStatusVariant = stat => {
-  const statLowerCase = stat.toLowerCase()
-  if (statLowerCase === 'finished')
-    return { "color": "secondary", "status_name": "Terminé" }
-  if (statLowerCase === 'failed')
-    return { "color": "error", "status_name": "Echec" }
-  if (statLowerCase === 'on hold')
-    return { "color": "warning", "status_name": "Halt" }
-  if (statLowerCase === 'in progress')
-    return { "color": "success", "status_name": "En cours" }
-  if (statLowerCase === 'pending')
-    return { "color": "primary", "status_name": "En attente" }
-  
-  return { "color": "secondary", "status_name": "Statut inconnu" }
 }
 
 // CRUD Functions
@@ -270,6 +256,12 @@ watchEffect(queryProjects)
               <tr class="v-data-table__tr">
                 <td :colspan="headers.length">
                   <p class="my-1">
+                    Titre: {{ slotProps.item.raw.project_title }}
+                  </p>
+                  <p
+                    v-if="slotProps.item.raw.project_members.length > 0"
+                    class="my-1"
+                  >
                     Manager: {{ slotProps.item.raw.project_members[0][0].project_member_name }}
                   </p>
                   <p class="my-1">
@@ -292,18 +284,28 @@ watchEffect(queryProjects)
                     icon="tabler-archive"
                   />
                 </VAvatar>
-                <span class="text-capitalize font-weight-medium">{{ item.raw.project_title }}</span>
+                <VTooltip
+                  open-delay="1000"
+                  location="top"
+                  activator="parent"
+                >
+                  <span>{{ item.raw.project_title }}</span>
+                </VTooltip>
+                <span
+                  style="max-width: 300px;"
+                  class="text-capitalize font-weight-medium text-truncate"
+                >{{ item.raw.project_title }}</span>
               </div>
             </template>
 
             <!-- 👉 Status -->
             <template #item.project_status="{ item }">
               <VAvatar
-                :color="resolveStatusStatusVariant(item.raw.project_status).color"
+                :color="resolveProjectStatusVariant(item.raw.project_status).color"
                 size="x-small"
               />
               <span>
-                {{ "  " + resolveStatusStatusVariant(item.raw.project_status).status_name }}
+                {{ "  " + resolveProjectStatusVariant(item.raw.project_status).status_name }}
               </span>
             </template>
 

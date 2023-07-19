@@ -8,7 +8,7 @@ const open = ref(['Project'])
 </script>
 
 <template>
-  <VRow v-if="project">
+  <VRow>
     <VCol cols="6">
       <VList v-model:opened="open">
         <VListGroup value="Project">
@@ -21,7 +21,10 @@ const open = ref(['Project'])
           </template>
   
           <!-- SECTION - Project manager list -->
-          <VListGroup value="Admin">
+          <VListGroup
+            v-if="project.length > 0"
+            value="Admin"
+          >
             <template #activator="{ props }">
               <VListItem
                 v-bind="props"
@@ -39,7 +42,7 @@ const open = ref(['Project'])
           <!-- !SECTION - Project manger  -->
   
           <!-- SECTION - Project members list -->
-          <VListGroup>
+          <VListGroup v-if="project.length > 0">
             <template #activator="{ props }">
               <VListItem
                 v-bind="props"

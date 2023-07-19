@@ -173,7 +173,7 @@ export const resolveProjectStatusVariant = stat => {
     return { "color": "warning", "status_name": "Halt" }
   if (statLowerCase === 'in progress')
     return { "color": "success", "status_name": "En cours" }
-  if (statLowerCase === 'pending')
+  if (statLowerCase === 'pending' | statLowerCase === 'scheduled')
     return { "color": "primary", "status_name": "En attente" }
   
   return { "color": "secondary", "status_name": "Statut inconnu" }

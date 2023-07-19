@@ -43,6 +43,8 @@ const tasksHeader = [
   {
     title: 'Activité',
     key: 'project_task_title',
+    width: 120,
+    maxWidth: 120,
   },
   {
     title: 'Responsable',
@@ -87,6 +89,9 @@ const tasksHeader = [
           <tr class="v-data-table__tr">
             <td :colspan="tasksHeader.length">
               <p class="my-1">
+                Activité: {{ slotProps.item.raw.project_task_title }}
+              </p>
+              <p class="my-1">
                 Budget: {{ resolveXOFCurrencyFormat(slotProps.item.raw.project_task_budget ) }}
               </p>
               <p class="my-1">
@@ -96,6 +101,17 @@ const tasksHeader = [
           </tr>
         </template>
         
+        <template #item.project_task_title="{ item }">
+          <div class="d-flex align-center gap-4">
+            <span
+              style="max-width: 200px;"
+              class="text-truncate"
+            >
+              {{ item.raw.project_task_title }}
+            </span>
+          </div>
+        </template>
+
         <template #item.project_task_start_date="{ item }">
           {{ resolveLocalDateVariantShort(item.raw.project_task_start_date) }}
         </template>

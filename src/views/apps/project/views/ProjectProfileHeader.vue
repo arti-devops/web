@@ -38,8 +38,17 @@ console.log(project)
                 icon="tabler-user"
                 class="me-1"
               />
-              <span class="text-body-1">
+              <span
+                v-if="project.project_members.lenght > 0"
+                class="text-body-1"
+              >
                 {{ project.project_members[0][0].project_member_name }}
+              </span>
+              <span
+                v-else
+                class="text-body-1"
+              >
+                Ce projet n'a pas de Manager
               </span>
             </span>
 

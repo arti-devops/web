@@ -5,7 +5,7 @@ import { defineStore } from 'pinia'
 export const useProjectListStore = defineStore('ProjectListStore', {
   state: () => ({
     projects: [],
-    project: null,
+    project: [],
   }),
   actions: {
     // 👉 Fetch Projects data
