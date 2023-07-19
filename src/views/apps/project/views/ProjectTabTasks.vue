@@ -33,8 +33,6 @@ if (project.project_tasks) {
   tasks.value = project.project_tasks.flat() 
 }
 
-console.log(tasks)
-
 const tasksHeader = [
   {
     title: '',

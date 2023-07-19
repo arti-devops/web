@@ -6,17 +6,14 @@ import ProjectTabResources from '@/views/apps/project/views/ProjectTabResources.
 import ProjectTabTasks from '@/views/apps/project/views/ProjectTabTasks.vue'
 import { useUserListStore } from '@/views/apps/user/useUserListStore'
 
-
-
 const isAddNewTaskVisible = ref(false)
 
-
 // Add and refetch Project
-const addNewProject = async projectData => {
+const addNewTask = async projectData => {
   console.log(projectData)
 
-  await projectListStore.addProject(projectData)
-  queryProjects()
+  //await projectListStore.addProject(projectData)
+  //queryProjects()
 }
 
 
@@ -107,7 +104,8 @@ userListStore.fetchUser(Number(5)).then(response => {
       </VCard>
       <AddNewTask
         v-model:isDrawerOpen="isAddNewTaskVisible"
-        @project-data="addNewProject"
+        :project-id="router.params.id"
+        @project-data="addNewTask"
       />
     </VCol>
   </VRow>

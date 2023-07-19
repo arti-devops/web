@@ -1,21 +1,11 @@
 <script setup>
 import { resolveLocalDateVariantShort, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
-import axios from '@axios'
 
 const projectListStore = useProjectListStore()
 const project = projectListStore.project
 
 const profileHeaderData = ref()
-
-const fetchHeaderData = () => {
-  axios.get('/pages/profile-header').then(response => {
-    profileHeaderData.value = response.data
-  })
-}
-
-fetchHeaderData()
-console.log(project)
 </script>
 
 <template>

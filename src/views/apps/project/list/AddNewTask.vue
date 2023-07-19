@@ -18,19 +18,22 @@ const emit = defineEmits([
 
 const projectListStore = useProjectListStore()
 
-const projectTitle = ref("Simple Project")
+const projectTitle = ref("Simple Project Task")
 const projectSDate = ref("2023-05-01")
 const projectEDate = ref("2023-09-07")
 const projectStatus = ref("IN PROGRESS")
-const projectBudget = ref(1500000)
+const projectBudget = ref(300000)
 const projectManager = ref()
 const projectMembers = ref([])
 const projectStratOb = ref("OBS-001")
 const projectDirection = ref("DSESP")
-const projectDescription = ref("Advanced Web App")
+const projectDescription = ref("Advanced Web App, Task of adding subtasks. Type here to describe your task")
 
 const membersList = ref([])
 let simpleMembersList = []
+
+//❗ - Reloading the Project View Page can break the App here.
+const projectId = projectListStore.project.project_id
 
 const isFormValid = ref(false)
 const refForm = ref()
@@ -71,16 +74,18 @@ const onSubmit = () => {
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
       emit('projectData', {
-        project_title: projectTitle.value,
-        project_budget: projectBudget.value,
-        project_status: projectStatus.value,
-        project_stratob: projectStratOb.value,
-        project_members: pMembers,
-        project_end_date: projectEDate.value,
-        project_direction: projectDirection.value,
-        project_start_date: projectSDate.value,
-        project_description: projectDescription.value,
-      })
+        project_id: projectId,
+        task: {
+          project_title: projectTitle.value,
+          project_budget: projectBudget.value,
+          project_status: projectStatus.value,
+          project_stratob: projectStratOb.value,
+          project_members: pMembers,
+          project_end_date: projectEDate.value,
+          project_direction: projectDirection.value,
+          project_start_date: projectSDate.value,
+          project_description: projectDescription.value,
+        } })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
         refForm.value?.reset()
@@ -104,7 +109,6 @@ const fetchMembersList = async () =>{
     value: item.member_matricule,
   }))
 
-  console.log(simpleList)
   simpleMembersList = simpleList
   
   return simpleList
@@ -124,7 +128,7 @@ watchEffect((fetchMembersList))
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Nouveau Projet"
+      title="Nouvelle Activité"
       @cancel="closeNavigationDrawer"
     />
     <VDivider />
@@ -165,7 +169,7 @@ watchEffect((fetchMembersList))
                 />
               </VCol>
 
-              <!-- 👉 Project Manager -->
+              <!-- 👉 Task Manager -->
               <VCol
                 v-if="membersList"
                 cols="12"
@@ -173,7 +177,7 @@ watchEffect((fetchMembersList))
                 <AppAutocomplete
                   v-model="projectManager"
                   :rules="[requiredValidator]"
-                  label="Responsable du projet"
+                  label="Responsable de l'activité"
                   :items="simpleMembersList"
                   item-title="title"
                   item-value="value"
@@ -191,16 +195,6 @@ watchEffect((fetchMembersList))
                 />
               </VCol>
 
-              <!-- 👉 Project Strategic Objective -->
-              <VCol cols="12">
-                <AppSelect
-                  v-model="projectStratOb"
-                  :rules="[requiredValidator]"
-                  label="Objectif stratétique"
-                  :items="['OBS-001','OBS-002']"
-                />
-              </VCol>
-
               <!-- 👉 Project Status -->
               <VCol cols="12">
                 <AppSelect
@@ -215,34 +209,12 @@ watchEffect((fetchMembersList))
                 />
               </VCol>
 
-              <!-- 👉 Project Direction -->
-              <!-- TODO Add all directions -->
-              <VCol cols="12">
-                <AppSelect
-                  v-model="projectDirection"
-                  :rules="[requiredValidator]"
-                  label="Direction à charge"
-                  :items="['DSESP','DRRN','DCSTI','DSI','DCP','DAAF','DMGP','DGPECRP']"
-                />
-              </VCol>
-                
-              <!-- 👉 Project Members -->
-              <VCol cols="12">
-                <AppAutocomplete
-                  v-model="projectMembers"
-                  label="Participants"
-                  :items="simpleMembersList"
-                  chips
-                  multiple
-                  clearable
-                />
-              </VCol>
-
               <!-- 👉 Project Description -->
               <VCol cols="12">
-                <AppTextField
+                <AppTextarea
                   v-model="projectDescription"
                   label="Description"
+                  multiline
                 />
               </VCol>
 

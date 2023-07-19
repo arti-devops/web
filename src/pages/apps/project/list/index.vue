@@ -132,8 +132,6 @@ const isAddNewProjectDrawerVisible = ref(false)
 
 // Add and refetch Project
 const addNewProject = async projectData => {
-  console.log(projectData)
-
   await projectListStore.addProject(projectData)
   queryProjects()
 }
@@ -141,7 +139,6 @@ const addNewProject = async projectData => {
 // Update and refresh Project
 const updateProjectTrigger = projectId => {
   projectListStore.fetchProject(projectId).then(response => {
-    console.log(response.data)
     projectToUpdate.value = response.data
     isUpdateDrawerVisible.value = true
   })
@@ -160,7 +157,6 @@ const deleteProject = async id => {
 
 const selectProject = id => {
   projectListStore.stateProject(id)
-  console.log(projectListStore.project)
 }
 
 // Functions Calls
