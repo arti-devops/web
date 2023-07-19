@@ -9,6 +9,11 @@ export const useDeviceListStore = defineStore('DeviceListStore', {
       filter: params, 
     } ) },
 
+    // 👉 Fetch devices data
+    updateDevicesOnlineStatus(payload) { return axios.post(`${BASE_URL}/provider/status/printers`, { 
+      printers: payload, 
+    }) },
+
     // 👉 Add New Device
     addDevice(deviceData) {
       return new Promise((resolve, reject) => {

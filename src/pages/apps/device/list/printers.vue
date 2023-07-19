@@ -130,7 +130,7 @@ const resolveDeviceConnexionModeVariant = stat => {
   if (statLowerCase === 'cable')
     return { status: 'Cable', color: 'primary' }
   if (statLowerCase === 'wifi')
-    return { status: 'WIFI', color: 'error' }
+    return { status: 'WIFI', color: 'info' }
   if (statLowerCase === 'usb')
     return { status: 'USB', color: 'warning' }
     
@@ -164,6 +164,33 @@ const deleteDevice = async id => {
   await deviceListStore.deleteDevice(id)
   fetchDevices()
 }
+
+const d = async () => {
+  if (devices.value.length > 0){
+    
+    const ipAddresses = Object.values(devices.value).map(obj => obj.device_ip_address).filter(ip => ip).map(ip => ({ ip }))
+
+    console.log(ipAddresses)
+    await deviceListStore.updateDevicesOnlineStatus(ipAddresses).then(response =>{
+      const statusList = response.data
+      for (const [key, value] of Object.entries(devices.value)) {
+        if (key !== "device_id" && key !== "device_user") {
+          const ipAddress = value.device_ip_address
+          const statusItem = statusList.find(item => item.ip === ipAddress)
+          const status = statusItem ? statusItem.status : "offline"
+
+          value.device_status = status
+        }
+      }
+      console.log(response.data)
+    })
+  }
+  else{
+    console.log(devices.value.length)
+  }
+}
+
+watchEffect(d)
 </script>
 
 <template>
@@ -309,7 +336,7 @@ const deleteDevice = async id => {
             </template>
 
             <!-- 👉 Device Type -->
-            <template #item.device_type="{ item }">
+            <template #item.device_hostname="{ item }">
               <div class="d-flex align-center gap-4">
                 <VAvatar
                   :size="30"
@@ -321,7 +348,7 @@ const deleteDevice = async id => {
                     :icon="resolveDeviceTypeVariant(item.raw.device_type).icon"
                   />
                 </VAvatar>
-                <span class="text-capitalize">{{ item.raw.device_type }}</span>
+                <span class="text-capitalize">{{ item.raw.device_hostname }}</span>
               </div>
             </template>
 
