@@ -29,8 +29,10 @@ const updateProject = async projectData => {
   queryProjects()
 }
 
-if (project.project_tasks) {
-  tasks.value = project.project_tasks.flat() 
+const fetchTasks = () => {
+  if (project.project_tasks) {
+    tasks.value = project.project_tasks.flat() 
+  }
 }
 
 const tasksHeader = [
@@ -66,6 +68,8 @@ const tasksHeader = [
     sortable: false,
   },
 ]
+
+watchEffect(fetchTasks)
 </script>
 
 <template>

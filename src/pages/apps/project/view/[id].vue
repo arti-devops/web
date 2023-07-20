@@ -12,7 +12,9 @@ const isAddNewTaskVisible = ref(false)
 const addNewTask = async projectData => {
   console.log(projectData)
 
-  //await projectListStore.addProject(projectData)
+  await projectListStore.addTask(projectData)
+  projectListStore.stateProject(projectData.project_id)
+
   //queryProjects()
 }
 

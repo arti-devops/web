@@ -24,9 +24,6 @@ const projectEDate = ref("2023-09-07")
 const projectStatus = ref("IN PROGRESS")
 const projectBudget = ref(300000)
 const projectManager = ref()
-const projectMembers = ref([])
-const projectStratOb = ref("OBS-001")
-const projectDirection = ref("DSESP")
 const projectDescription = ref("Advanced Web App, Task of adding subtasks. Type here to describe your task")
 
 const membersList = ref([])
@@ -47,44 +44,21 @@ const closeNavigationDrawer = () => {
   })
 }
 
-const restructureProjectMembersData = () =>{
-  // Restructure Project Manager data
-  let pManager = simpleMembersList.find(item => item.value === projectManager.value)
-  pManager["role"] = "MANAGER"
-
-  let pMembers = Object.values(projectMembers.value).map(item => {
-    const foundObject = simpleMembersList.find(obj => obj.value === item)
-    
-    return foundObject ? { title: foundObject.title, value: item, role: "MEMBER" } : null
-  })
-
-  pMembers.unshift(pManager)
-
-  return pMembers.map(item => ({
-    project_member_name: item.title.trim(),
-    project_member_id: item.value,
-    project_member_role: item.role,
-  }))
-}
-
 const onSubmit = () => {
 
-  let pMembers = restructureProjectMembersData()
-  
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
       emit('projectData', {
         project_id: projectId,
         task: {
-          project_title: projectTitle.value,
-          project_budget: projectBudget.value,
-          project_status: projectStatus.value,
-          project_stratob: projectStratOb.value,
-          project_members: pMembers,
-          project_end_date: projectEDate.value,
-          project_direction: projectDirection.value,
-          project_start_date: projectSDate.value,
-          project_description: projectDescription.value,
+          project_task_id: "",
+          project_task_title: projectTitle.value,
+          project_task_budget: projectBudget.value,
+          project_task_status: projectStatus.value,
+          project_task_manager: projectManager.value,
+          project_task_end_date: projectEDate.value,
+          project_task_start_date: projectSDate.value,
+          project_task_description: projectDescription.value,
         } })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
@@ -180,7 +154,7 @@ watchEffect((fetchMembersList))
                   label="Responsable de l'activité"
                   :items="simpleMembersList"
                   item-title="title"
-                  item-value="value"
+                  item-value="title"
                   chips
                   clearable
                 />
