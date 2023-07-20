@@ -4,36 +4,22 @@ import UpdateTaskDrawer from '@/views/apps/project/list/UpdateTaskDrawer.vue'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
-const projectListStore = useProjectListStore()
-const project = projectListStore.project
+// ANCHOR - PROPS
+
+const props = defineProps({
+  selectedProject: {
+    type: Object,
+    required: true,
+  },
+})
+
+// ANCHOR - Page Variables
+
 const tasks = ref(null)
+const selectedProject = ref(null)
+const projectListStore = useProjectListStore()
 
-// CRUD and Page Variables
-
-const projectToUpdate = ref({})
-const isUpdateDrawerVisible = ref(false)
-
-// const isUpdateTaskVisible = ref(false)
-
-// Update and refresh Project
-const updateProjectTrigger = projectId => {
-  // projectListStore.fetchProject(projectId).then(response => {
-  //   console.log(response.data)
-  //   projectToUpdate.value = response.data
-  // })
-  isUpdateDrawerVisible.value = true // Déplacez cette ligne ici
-}
-
-const updateProject = async projectData => {
-  await projectListStore.updateProject(projectData)
-  queryProjects()
-}
-
-const fetchTasks = () => {
-  if (project.project_tasks) {
-    tasks.value = project.project_tasks.flat() 
-  }
-}
+// ANCHOR - Table headers
 
 const tasksHeader = [
   {
@@ -69,7 +55,37 @@ const tasksHeader = [
   },
 ]
 
-watchEffect(fetchTasks)
+// ANCHOR - Drawer Variables
+
+const projectToUpdate = ref({})
+const isUpdateDrawerVisible = ref(false)
+
+// const isUpdateTaskVisible = ref(false)
+
+// ANCHOR - CRUD Functions
+
+const selectProject = () => {
+  selectedProject.value = props.selectedProject
+  if(selectedProject.value.project_tasks){
+    tasks.value = selectedProject.value.project_tasks.flat()
+  }
+}
+
+// Update and refresh Project
+const updateProjectTrigger = projectId => {
+  // projectListStore.fetchProject(projectId).then(response => {
+  //   console.log(response.data)
+  //   projectToUpdate.value = response.data
+  // })
+  isUpdateDrawerVisible.value = true // Déplacez cette ligne ici
+}
+
+const updateProject = async projectData => {
+  await projectListStore.updateProject(projectData)
+  queryProjects()
+}
+
+watchEffect(selectProject)
 </script>
 
 <template>

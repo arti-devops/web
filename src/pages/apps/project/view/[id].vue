@@ -4,28 +4,11 @@ import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import ProjectProfileHeader from '@/views/apps/project/views/ProjectProfileHeader.vue'
 import ProjectTabResources from '@/views/apps/project/views/ProjectTabResources.vue'
 import ProjectTabTasks from '@/views/apps/project/views/ProjectTabTasks.vue'
-import { useUserListStore } from '@/views/apps/user/useUserListStore'
 
-const isAddNewTaskVisible = ref(false)
-
-// Add and refetch Project
-const addNewTask = async projectData => {
-  console.log(projectData)
-
-  await projectListStore.addTask(projectData)
-  projectListStore.stateProject(projectData.project_id)
-
-  //queryProjects()
-}
-
-
-const projectListStore = useProjectListStore()
 const router = useRoute()
-
-const userListStore = useUserListStore()
-
-const userData = ref()
 const userTab = ref(null)
+const isAddNewTaskVisible = ref(false)
+const projectListStore = useProjectListStore()
 
 const tabs = [
   {
@@ -38,14 +21,15 @@ const tabs = [
   },
 ]
 
-//userListStore.fetchUser(Number(route.params.id)).then(response => {
-userListStore.fetchUser(Number(5)).then(response => {
-  userData.value = response.data
-})
+// Add and refetch Project
+const addNewTask = async projectData => {
+  await projectListStore.addTask(projectData)
+  await projectListStore.stateProject(projectData.project_id)
+}
 </script>
 
 <template>
-  <VRow v-if="userData">
+  <VRow>
     <VCol cols="12">
       <ProjectProfileHeader class="mb-5" />
     </VCol>
@@ -96,7 +80,7 @@ userListStore.fetchUser(Number(5)).then(response => {
           :touch="false"
         >
           <VWindowItem>
-            <ProjectTabTasks />
+            <ProjectTabTasks v-model:selectedProject="projectListStore.project" />
           </VWindowItem>
 
           <VWindowItem>
