@@ -37,7 +37,7 @@ export const useProjectListStore = defineStore('ProjectListStore', {
 
     stateProject(id) {
       return new Promise((resolve, reject) => {
-        axios.get(`${BASE_URL}/projects/${id}`).then(response => this.project = response.data).catch(error => reject(error))
+        axios.get(`${BASE_URL}/projects/${id}`).then(response =>{ this.project = response.data; resolve(response.data)}).catch(error => reject(error))
       })
     },
 
@@ -61,13 +61,16 @@ export const useProjectListStore = defineStore('ProjectListStore', {
 
     // 👉 Add New Project Task
     addTask(projectData) {
-      return new Promise(async (resolve, reject) => {
-        await axios.post(`${BASE_URL}/projects/new/task`, { 
+      return new Promise((resolve, reject) => {
+        axios.post(`${BASE_URL}/projects/new/task`, {
           project_id: projectData.project_id,
           task: projectData.task,
-        }).then(response => resolve(response)).catch(error => reject(error))
+        })
+          .then(response => resolve(response)) // Resolve the promise with the data if successful
+          .catch(error => reject(error)) // Reject the promise with the error if there's an error
       })
     },
+    
 
     // !SECTION - Project Task Links
     
