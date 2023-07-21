@@ -70,6 +70,26 @@ export const useProjectListStore = defineStore('ProjectListStore', {
           .catch(error => reject(error)) // Reject the promise with the error if there's an error
       })
     },
+
+    // 👉 Update Project
+    updateTask(projectData) {
+      return new Promise(async (resolve, reject) => {
+        await axios.put(`${BASE_URL}/projects/update/task`, {
+          project_id: projectData.project_id,
+          task: projectData.task, 
+        }).then(response => resolve(response)).catch(error => reject(error))
+      })
+    },
+
+    // 👉 Delete Project
+    deleteTask(projectData) {
+      return new Promise(async (resolve, reject) => {
+        await axios.post(`${BASE_URL}/projects/delete/task`, { 
+          project_id: projectData.project_id,
+          project_task_id: projectData.project_task_id,
+        }).then(response => resolve(response)).catch(error => reject(error))
+      })
+    },
     
 
     // !SECTION - Project Task Links

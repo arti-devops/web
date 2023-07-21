@@ -66,13 +66,14 @@ const isUpdateDrawerVisible = ref(false)
 
 const selectProject = () => {
   selectedProject.value = props.selectedProject
+  projectToUpdate.value = props.selectedProject
   if(selectedProject.value.project_tasks){
     tasks.value = selectedProject.value.project_tasks.flat()
   }
 }
 
 // Update and refresh Project
-const updateProjectTrigger = projectId => {
+const updateTaskTrigger = projectId => {
   // projectListStore.fetchProject(projectId).then(response => {
   //   console.log(response.data)
   //   projectToUpdate.value = response.data
@@ -80,9 +81,20 @@ const updateProjectTrigger = projectId => {
   isUpdateDrawerVisible.value = true // Déplacez cette ligne ici
 }
 
-const updateProject = async projectData => {
-  await projectListStore.updateProject(projectData)
-  queryProjects()
+const updateTask = async projectData => {
+  await projectListStore.updateTask(projectData)
+  selectedProject()
+}
+
+const deleteTask = async taskId => {
+  const projectData = {
+    project_id: selectedProject.value.project_id,
+    project_task_id: taskId,
+  }
+
+  await projectListStore.deleteTask(projectData)
+  projectListStore.stateProject(projectData.project_id)
+  selectProject()
 }
 
 watchEffect(selectProject)
@@ -169,11 +181,17 @@ watchEffect(selectProject)
 
             <VMenu activator="parent">
               <VList>
-                <VListItem @click="updateProjectTrigger(item.raw.project_task_id)">
+                <VListItem @click="updateTaskTrigger(item.raw.project_task_id)">
                   <template #prepend>
                     <VIcon icon="tabler-edit" />
                   </template>
                   <VListItemTitle>Modifier</VListItemTitle>
+                </VListItem>
+                <VListItem @click="deleteTask(item.raw.project_task_id)">
+                  <template #prepend>
+                    <VIcon icon="tabler-trash" />
+                  </template>
+                  <VListItemTitle>Supprimer</VListItemTitle>
                 </VListItem>
               </VList>
             </VMenu>
@@ -185,7 +203,7 @@ watchEffect(selectProject)
       <UpdateTaskDrawer
         v-model:isDrawerOpen="isUpdateDrawerVisible"
         :project-to-update="projectToUpdate"
-        @project-data="updateProject"
+        @project-data="updateTask"
       />
     </VCol>
   </VRow>
