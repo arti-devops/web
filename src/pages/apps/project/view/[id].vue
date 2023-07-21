@@ -130,9 +130,14 @@ watchEffect(tabs)
         v-model="isSnackbarTopEndVisible"
         location="top end"
         color="error"
-        :timeout="800"
+        :timeout="1200"
       >
-        La tâche a été supprimée
+        <VAlert
+          type="error"
+          class="mt-0 mb-0"
+        >
+          <strong>La tâche a été supprimée</strong>
+        </VAlert>
       </VSnackbar>
     </VCol>
   </VRow>

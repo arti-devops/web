@@ -63,6 +63,13 @@ const onSubmit = () => {
       emit('update:isDrawerOpen', false)
       nextTick(() => {
         refForm.value?.reset()
+        projectTitle.value = "Activité"
+        projectSDate.value = new Date()
+        projectEDate.value = new Date()
+        projectStatus.value = "PENDING"
+        projectBudget.value = 0
+        projectManager.value = simpleMembersList[0].title
+        projectDescription.value = "D"
         refForm.value?.resetValidation()
       })
     }
@@ -175,7 +182,7 @@ watchEffect((fetchMembersList))
                   v-model="projectStatus"
                   :rules="[requiredValidator]"
                   label="Status"
-                  :items="[{title:'Non démarré',value:'SHCEDULED'},
+                  :items="[{title:'Non démarré',value:'PENDING'},
                            {title:'En cours', value:'IN PROGRESS'},
                            {title:'Terminé', value:'FINISHED'},
                            {title:'Suspendu', value:'SUSPENDED'},
