@@ -120,6 +120,7 @@ watchEffect(selectProject)
       <!-- 👉 Recent devices -->
 
       <VDataTable
+        items-per-page="50"
         :items="tasks"
         :headers="tasksHeader"
         hide-default-footer
