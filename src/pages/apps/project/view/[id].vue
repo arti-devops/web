@@ -12,14 +12,14 @@ const projectListStore = useProjectListStore()
 
 //SECTION - Dynamic Counts variables
 const project_tasks_count = ref(0)
+const project_members_count = ref(0)
 
 //❗ - Was updated, potential source of error
 project_tasks_count.value = projectListStore.project.project_tasks ? projectListStore.project.project_tasks.length : 0
+project_members_count.value = projectListStore.project.project_members ? projectListStore.project.project_members.length : 0
 
-// !SECTION - Dynamic Counts variables
 
-
-const tabs = [
+const tabs = computed(() => [
   {
     icon: 'tabler-user-check',
     title: 'Activités',
@@ -28,9 +28,11 @@ const tabs = [
   {
     icon: 'tabler-apps',
     title: 'Ressources',
-    tasksCount: project_tasks_count.value,
+    tasksCount: project_members_count.value,
   },
-]
+])
+
+// !SECTION - Dynamic Counts variables
 
 // Add and refetch Project
 const addNewTask = async projectData => {
@@ -38,6 +40,8 @@ const addNewTask = async projectData => {
   await projectListStore.stateProject(projectData.project_id)
   project_tasks_count.value += 1
 }
+
+watchEffect(tabs)
 </script>
 
 <template>
@@ -83,7 +87,7 @@ const addNewTask = async projectData => {
               class="me-1"
             />
             <VBadge
-              :content="project_tasks_count"
+              :content="tab.tasksCount"
               :offset-x="-18"
               :offset-y="6"
             >
