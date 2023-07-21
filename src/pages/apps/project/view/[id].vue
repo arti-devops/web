@@ -1,5 +1,5 @@
 <script setup>
-import AddNewTask from '@/views/apps/project/list/AddNewTask.vue'
+import AddNewTaskDrawer from '@/views/apps/project/list/AddNewTaskDrawer.vue'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import ProjectProfileHeader from '@/views/apps/project/views/ProjectProfileHeader.vue'
 import ProjectTabResources from '@/views/apps/project/views/ProjectTabResources.vue'
@@ -88,7 +88,7 @@ const addNewTask = async projectData => {
           </VWindowItem>
         </VWindow>
       </VCard>
-      <AddNewTask
+      <AddNewTaskDrawer
         v-model:isDrawerOpen="isAddNewTaskVisible"
         :project-id="router.params.id"
         @project-data="addNewTask"
