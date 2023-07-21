@@ -22,7 +22,7 @@ const open = ref(['Project'])
   
           <!-- SECTION - Project manager list -->
           <VListGroup
-            v-if="project.length > 0"
+            v-if="project.project_members.length > 0"
             value="Admin"
           >
             <template #activator="{ props }">
@@ -42,7 +42,7 @@ const open = ref(['Project'])
           <!-- !SECTION - Project manger  -->
   
           <!-- SECTION - Project members list -->
-          <VListGroup v-if="project.length > 0">
+          <VListGroup v-if="project.project_members.length > 0">
             <template #activator="{ props }">
               <VListItem
                 v-bind="props"
