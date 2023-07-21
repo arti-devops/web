@@ -10,14 +10,25 @@ const userTab = ref(null)
 const isAddNewTaskVisible = ref(false)
 const projectListStore = useProjectListStore()
 
+//SECTION - Dynamic Counts variables
+const project_tasks_count = ref(0)
+
+//❗ - Was updated, potential source of error
+project_tasks_count.value = projectListStore.project.project_tasks ? projectListStore.project.project_tasks.length : 0
+
+// !SECTION - Dynamic Counts variables
+
+
 const tabs = [
   {
     icon: 'tabler-user-check',
     title: 'Activités',
+    tasksCount: project_tasks_count.value,
   },
   {
     icon: 'tabler-apps',
     title: 'Ressources',
+    tasksCount: project_tasks_count.value,
   },
 ]
 
@@ -25,6 +36,7 @@ const tabs = [
 const addNewTask = async projectData => {
   await projectListStore.addTask(projectData)
   await projectListStore.stateProject(projectData.project_id)
+  project_tasks_count.value += 1
 }
 </script>
 
@@ -70,7 +82,13 @@ const addNewTask = async projectData => {
               :icon="tab.icon"
               class="me-1"
             />
-            <span>{{ tab.title }}</span>
+            <VBadge
+              :content="project_tasks_count"
+              :offset-x="-18"
+              :offset-y="6"
+            >
+              <span>{{ tab.title }}</span>
+            </VBadge>
           </VTab>
         </VTabs>
 
@@ -80,7 +98,10 @@ const addNewTask = async projectData => {
           :touch="false"
         >
           <VWindowItem>
-            <ProjectTabTasks v-model:selectedProject="projectListStore.project" />
+            <ProjectTabTasks 
+              v-model:selectedProject="projectListStore.project"
+              v-model:tasksCount="project_tasks_count"
+            />
           </VWindowItem>
 
           <VWindowItem>

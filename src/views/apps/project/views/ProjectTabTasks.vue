@@ -11,7 +11,15 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  tasksCount: {
+    type: Number,
+    required: true,
+  },
 })
+
+const emit = defineEmits([
+  'update:tasksCount',
+])
 
 // 👉 - Page Variables
 
@@ -95,6 +103,7 @@ const deleteTask = async taskId => {
   await projectListStore.deleteTask(projectData)
   projectListStore.stateProject(projectData.project_id)
   selectProject()
+  emit('update:tasksCount', props.tasksCount - 1)
 }
 
 watchEffect(selectProject)
