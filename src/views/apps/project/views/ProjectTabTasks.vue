@@ -4,7 +4,7 @@ import UpdateTaskDrawer from '@/views/apps/project/list/UpdateTaskDrawer.vue'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
-// ANCHOR - PROPS
+// 👉 - PROPS Definition
 
 const props = defineProps({
   selectedProject: {
@@ -13,13 +13,13 @@ const props = defineProps({
   },
 })
 
-// ANCHOR - Page Variables
+// 👉 - Page Variables
 
 const tasks = ref(null)
 const selectedProject = ref(null)
 const projectListStore = useProjectListStore()
 
-// ANCHOR - Table headers
+// 👉 - Table headers
 
 const tasksHeader = [
   {
@@ -55,35 +55,35 @@ const tasksHeader = [
   },
 ]
 
-// ANCHOR - Drawer Variables
+// 👉 - Drawer Variables
 
-const projectToUpdate = ref({})
+const taskToUpdate = ref(null)
 const isUpdateDrawerVisible = ref(false)
 
-// const isUpdateTaskVisible = ref(false)
-
-// ANCHOR - CRUD Functions
+// 👉 - CRUD Functions
 
 const selectProject = () => {
   selectedProject.value = props.selectedProject
-  projectToUpdate.value = props.selectedProject
+  taskToUpdate.value = props.selectedProject
   if(selectedProject.value.project_tasks){
     tasks.value = selectedProject.value.project_tasks.flat()
   }
 }
 
-// Update and refresh Project
-const updateTaskTrigger = projectId => {
-  // projectListStore.fetchProject(projectId).then(response => {
-  //   console.log(response.data)
-  //   projectToUpdate.value = response.data
-  // })
-  isUpdateDrawerVisible.value = true // Déplacez cette ligne ici
+const updateTaskTrigger = taskData => {
+  const TaskToUpdate = {
+    project_id: selectedProject.value.project_id,
+    task: taskData,
+  }
+
+  taskToUpdate.value = TaskToUpdate
+  isUpdateDrawerVisible.value = true
 }
 
 const updateTask = async projectData => {
   await projectListStore.updateTask(projectData)
-  selectedProject()
+  projectListStore.stateProject(projectData.project_id)
+  selectProject()
 }
 
 const deleteTask = async taskId => {
@@ -155,7 +155,7 @@ watchEffect(selectProject)
         </template>
         
         <template #item.project_task_status="{ item }">
-          <!-- ANCHOR - Status desplay -->
+          <!-- 👉 - Status desplay -->
           <VAvatar
             :color="resolveProjectStatusVariant(item.raw.project_task_status).color"
             size="17"
@@ -166,7 +166,7 @@ watchEffect(selectProject)
         </template>
         
         
-        <!-- ANCHOR Actions -->
+        <!-- 👉 Actions -->
         <template #item.actions="{ item }">
           <VBtn
             icon
@@ -181,7 +181,7 @@ watchEffect(selectProject)
 
             <VMenu activator="parent">
               <VList>
-                <VListItem @click="updateTaskTrigger(item.raw.project_task_id)">
+                <VListItem @click="updateTaskTrigger(item.raw)">
                   <template #prepend>
                     <VIcon icon="tabler-edit" />
                   </template>
@@ -202,8 +202,8 @@ watchEffect(selectProject)
       </VDataTable>
       <UpdateTaskDrawer
         v-model:isDrawerOpen="isUpdateDrawerVisible"
-        :project-to-update="projectToUpdate"
-        @project-data="updateTask"
+        :task-to-update="taskToUpdate"
+        @task-data="updateTask"
       />
     </VCol>
   </VRow>
