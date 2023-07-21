@@ -10,6 +10,9 @@ const userTab = ref(null)
 const isAddNewTaskVisible = ref(false)
 const projectListStore = useProjectListStore()
 
+//👉 - Snackbar
+const isSnackbarTopEndVisible = ref(false)
+
 //SECTION - Dynamic Counts variables
 const project_tasks_count = ref(0)
 const project_members_count = ref(0)
@@ -39,6 +42,10 @@ const addNewTask = async projectData => {
   await projectListStore.addTask(projectData)
   await projectListStore.stateProject(projectData.project_id)
   project_tasks_count.value += 1
+}
+
+const aTaskWasDeleted= () =>{
+  isSnackbarTopEndVisible.value = true
 }
 
 watchEffect(tabs)
@@ -105,6 +112,7 @@ watchEffect(tabs)
             <ProjectTabTasks 
               v-model:selectedProject="projectListStore.project"
               v-model:tasksCount="project_tasks_count"
+              @delete-event="aTaskWasDeleted"
             />
           </VWindowItem>
 
@@ -118,6 +126,14 @@ watchEffect(tabs)
         :project-id="router.params.id"
         @project-data="addNewTask"
       />
+      <VSnackbar
+        v-model="isSnackbarTopEndVisible"
+        location="top end"
+        color="error"
+        :timeout="800"
+      >
+        La tâche a été supprimée
+      </VSnackbar>
     </VCol>
   </VRow>
 </template>

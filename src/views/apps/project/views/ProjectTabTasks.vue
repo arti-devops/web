@@ -19,6 +19,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:tasksCount',
+  'deleteEvent',
 ])
 
 // 👉 - Page Variables
@@ -104,6 +105,7 @@ const deleteTask = async taskId => {
   projectListStore.stateProject(projectData.project_id)
   selectProject()
   emit('update:tasksCount', props.tasksCount - 1)
+  emit('deleteEvent')
 }
 
 watchEffect(selectProject)
