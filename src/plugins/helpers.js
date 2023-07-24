@@ -178,3 +178,24 @@ export const resolveProjectStatusVariant = stat => {
   
   return { "color": "secondary", "status_name": "Statut inconnu" }
 }
+
+export function resolveIfDueDateIsDue(givenDate) {
+  // Step 1: Get the current date
+  const today = new Date()
+
+  // Step 2: Parse the given date into a JavaScript Date object
+  const givenDateParts = givenDate.split('-')
+  const year = parseInt(givenDateParts[0])
+  const month = parseInt(givenDateParts[1]) - 1 // JavaScript months are 0-indexed
+  const day = parseInt(givenDateParts[2])
+  const parsedGivenDate = new Date(year, month, day)
+
+  // Step 3: Compare the two dates
+  if (today > parsedGivenDate) {
+    return true
+  } else if (today < parsedGivenDate) {
+    return false
+  } else {
+    return false
+  }
+}

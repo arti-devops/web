@@ -1,11 +1,9 @@
 <script setup>
-import { resolveLocalDateVariantShort, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
+import { resolveIfDueDateIsDue, resolveLocalDateVariantShort, resolveProjectStatusVariant, resolveXOFCurrencyFormat } from '@/plugins/helpers'
 import { useProjectListStore } from '@/views/apps/project/useProjectListStore'
 
 const projectListStore = useProjectListStore()
 const project = projectListStore.project
-
-const profileHeaderData = ref()
 </script>
 
 <template>
@@ -29,7 +27,7 @@ const profileHeaderData = ref()
                 class="me-1"
               />
               <span
-                v-if="project.project_members.lenght > 0"
+                v-if="project.project_members.length > 0"
                 class="text-body-1"
               >
                 {{ project.project_members[0][0].project_member_name }}
@@ -72,7 +70,7 @@ const profileHeaderData = ref()
             <!-- ANCHOR - End Date -->
             <VDivider vertical />
             <VBtn
-              color="secondary"
+              :color="resolveIfDueDateIsDue(project.project_end_date)? 'error':'secondary'"
               variant="text"
             >
               <VIcon

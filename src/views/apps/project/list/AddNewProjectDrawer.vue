@@ -45,7 +45,7 @@ const closeNavigationDrawer = () => {
 }
 
 const restructureProjectMembersData = () =>{
-  // Restructure Project Manager data
+  // 👉 Restructure Project Manager data
   let pManager = simpleMembersList.find(item => item.value === projectManager.value)
   pManager["role"] = "MANAGER"
 
@@ -104,7 +104,6 @@ const fetchMembersList = async () =>{
     value: item.member_matricule,
   }))
 
-  console.log(simpleList)
   simpleMembersList = simpleList
   
   return simpleList

@@ -6,7 +6,7 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  projectToUpdate: {
+  taskToUpdate: {
     type: Object,
     required: true,
   },
@@ -14,23 +14,17 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:isDrawerOpen',
-  'projectData',
-  'projectId',
+  'taskData',
 ])
 
-const isFormValid = ref(false)
 const refForm = ref()
+const taskToUpdate = ref({})
+const isFormValid = ref(false)
 
-//const projectTitle = ref("Simple Project")
-//const projectSDate = ref("2023-05-01")
 const projectEDate = ref("2023-05-01")
 const projectStatus = ref("IN PROGRESS")
 
-//const projectManager = ref("ID-CISSE")
-//const projectMembers = ref(['ID-KANDE'])
-//const projectStratOb = ref("OBS-001")
-//const projectDirection = ref("DSESP")
-//const projectDescription = ref("Advanced Web App")
+// SECTION - Functions
 
 // 👉 drawer close
 const closeNavigationDrawer = () => {
@@ -42,14 +36,16 @@ const closeNavigationDrawer = () => {
 }
 
 const onSubmit = () => {
+
+  // 👉 - Assign new variables to send
+  taskToUpdate.value.project_task_status = projectStatus.value
+  taskToUpdate.value.project_task_end_date = projectEDate.value
+
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
-      emit('projectData', {
-        id: props.projectToUpdate.project_task_id,
-        project: {
-          project_task_status: projectStatus.value,
-          project_task_end_date: projectEDate.value,
-        } })
+      emit('taskData', {
+        project_id: props.taskToUpdate.project_id,
+        task: taskToUpdate.value })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
         refForm.value?.reset()
@@ -63,30 +59,20 @@ const handleDrawerModelValueUpdate = val => {
   emit('update:isDrawerOpen', val)
 }
 
-const resolveProjectStatusString = stat => {
-  try {
-    const status = stat.toLowerCase()
-    if(status === "pending") return 'Non démarré'
-    if(status === "on hold") return 'Suspendu'
-    if(status === "in progress") return 'En cours'
-    if(status === "failed") return 'Echec'
-    if(status === "finished") return 'Terminé'
-    
-    return 'Statut inconnu'
-    
-  } catch (error) {
-    //console.log(error)
+// 👉 Fill variables to update
+const fillVaiables = () => {
+  taskToUpdate.value = props.taskToUpdate.task
+  if(taskToUpdate.value){
+    if (taskToUpdate.value.project_task_end_date){
+      projectEDate.value = taskToUpdate.value.project_task_end_date
+    }else{
+      projectEDate.value = new Date()
+    }
+    projectStatus.value = taskToUpdate.value.project_task_status
   }
 }
 
-const fillVaiables = () => {
-  if (props.projectToUpdate.project_task_end_date){
-    projectEDate.value = props.projectToUpdate.project_task_end_date
-  }else{
-    projectEDate.value = new Date()
-  }
-  projectStatus.value = props.projectToUpdate.project_task_status
-}
+// !SECTION - Functions
 
 watchEffect(fillVaiables)
 </script>
@@ -123,7 +109,7 @@ watchEffect(fillVaiables)
                 <AppSelect
                   v-model="projectStatus"
                   label="Statut"
-                  :items="[{title:'Non démarré',value:'PENDING'},
+                  :items="[{title:'Non démarré',value:'PENDING'|'SCHEDULED'},
                            {title:'En cours', value:'IN PROGRESS'},
                            {title:'Terminé', value:'FINISHED'},
                            {title:'Suspendu', value:'ON HOLD'},
@@ -160,7 +146,7 @@ watchEffect(fillVaiables)
 
               <VDivider />
               <VSpacer />
-              <VList :items="[props.projectToUpdate.project_task_title]" />
+              <VList :items="[props.taskToUpdate.project_task_title]" />
             </VRow>
           </VForm>
         </VCardText>

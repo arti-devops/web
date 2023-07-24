@@ -9,6 +9,7 @@ import { VDataTableServer } from 'vuetify/labs/VDataTable'
 const projectListStore = useProjectListStore()
 
 const selectedProject = projectListStore.project
+const isSnackbarTopEndVisible = ref(false)
 
 // CRUD and Page Variables
 const projects = ref([])
@@ -152,6 +153,7 @@ const updateProject = async projectData => {
 // Delete and refetch Project
 const deleteProject = async id => {
   await projectListStore.deleteProject(id)
+  isSnackbarTopEndVisible.value = true
   queryProjects()
 }
 
@@ -277,7 +279,7 @@ watchEffect(queryProjects)
                 >
                   <VIcon
                     size="20"
-                    icon="tabler-archive"
+                    icon="tabler-affiliate-filled"
                   />
                 </VAvatar>
                 <VTooltip
@@ -288,7 +290,7 @@ watchEffect(queryProjects)
                   <span>{{ item.raw.project_title }}</span>
                 </VTooltip>
                 <span
-                  style="max-width: 300px;"
+                  style="max-width: 280px;"
                   class="text-capitalize font-weight-medium text-truncate"
                 >{{ item.raw.project_title }}</span>
               </div>
@@ -428,6 +430,19 @@ watchEffect(queryProjects)
           :project-to-update="projectToUpdate"
           @project-data="updateProject"
         />
+        <VSnackbar
+          v-model="isSnackbarTopEndVisible"
+          location="top end"
+          color="error"
+          :timeout="1200"
+        >
+          <VAlert
+            type="error"
+            class="mt-0 mb-0"
+          >
+            <strong>La Project a été supprimée</strong>
+          </VAlert>
+        </VSnackbar>
       </vcol>
     </vrow>
   </section>
