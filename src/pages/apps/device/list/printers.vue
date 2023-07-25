@@ -4,6 +4,7 @@ import AddNewPrinterDrawer from '@/views/apps/device/list/AddNewPrinterDrawer.vu
 import UpdatePrinterDrawer from '@/views/apps/device/list/UpdatePrinterDrawer.vue'
 import { useDeviceListStore } from '@/views/apps/device/useDeviceListStore'
 import avatar1 from '@images/avatars/avatar-1.png'
+import { ref } from 'vue'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
 const deviceListStore = useDeviceListStore()
@@ -178,11 +179,17 @@ const d = async () => {
           const ipAddress = value.device_ip_address
           const statusItem = statusList.find(item => item.ip === ipAddress)
           const status = statusItem ? statusItem.status : "offline"
+          const levels = statusItem ? statusItem.levels : null
 
           value.device_status = status
+          value.device_levels = levels
+
+          // console.log("DEBUG")
+          // console.log(value.device_levels)
+
         }
       }
-      console.log(response.data)
+      
     })
   }
   else{
@@ -308,8 +315,32 @@ watchEffect(d)
                   </p>
                 </td>
               </tr>
+              <tr
+                v-if="slotProps.item.raw.device_levels"
+                class="v-data-table__tr"
+              >
+                <td :colspan="headers.length">
+                  <p class="my-1">
+                    Niveau de noir: {{ slotProps.item.raw.device_levels['black'] }} %
+                  </p>
+                  <p class="my-1">
+                    Niveau de jaune: {{ slotProps.item.raw.device_levels['yello'] }} %
+                  </p>
+                  <p class="my-1">
+                    Niveau de magneta: {{ slotProps.item.raw.device_levels['magenta'] }} %
+                  </p>
+                  <p class="my-1">
+                    Niveau de bleu: {{ slotProps.item.raw.device_levels['cyan'] }} %
+                  </p>
+                  <p class="my-1">
+                    Niveau de rouge: {{ slotProps.item.raw.device_levels['magneta'] }} %
+                  </p>
+                </td>
+              </tr>
             </template>
+
             
+        
             <!-- Device User -->
             <template #item.deviceUser="{ item }">
               <div class="d-flex align-center">
