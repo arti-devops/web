@@ -19,17 +19,17 @@ const popularArticles = [
   },
   {
     slug: 'first-steps',
-    title: 'Liste des Postes',
+    title: 'Annuaire',
     img: phone,
     link: 'contactlist',
-    subtitle: 'Consulter la liste des projets et activitées',
+    subtitle: 'Consulter la liste des postes téléphoniques',
   },
   {
     slug: 'external-content',
-    title: 'Equipements',
+    title: 'Imprimantes',
     img: printer,
-    link: '',
-    subtitle: 'Consulter la liste du matériel',
+    link: 'printerslist',
+    subtitle: 'Consulter la liste des imprimates',
   },
 ]
 </script>

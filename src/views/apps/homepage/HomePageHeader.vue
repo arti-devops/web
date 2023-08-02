@@ -30,7 +30,7 @@ import UserProfileHeaderBg from '@images/pages/user-profile-header-bg.png'
           Bienvenue sur l'intranet de l'ARTI
         </h6>
 
-        <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">
+        <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4 mt-4">
           <div class="d-flex flex-wrap justify-center justify-sm-start flex-grow-1 gap-2">
             <VBtn
               color="secodary"

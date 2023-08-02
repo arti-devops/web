@@ -17,24 +17,28 @@ import CheckinsLateRankingCard from '@/views/dashboards/checkins/CheckinsLateRan
       <FrontNavigation />
     </VCol>
     <VCol cols="10">
-      <VRow>
-        <!-- 👉 Source Visits -->
-        <VCol
-          cols="12"
-          sm="6"
-          lg="6"
-        >
-          <CheckinsArrivalCard />
-        </VCol>
-        <VCol
-          cols="12"
-          sm="6"
-          lg="6"
-        >
-          <CheckinsLateRankingCard />
-        </VCol>
-      </VRow>
-    
+      <VCard title="Pointages">
+        <VDivider />
+        <VCardText>
+          <VRow>
+            <!-- 👉 Source Visits -->
+            <VCol
+              cols="12"
+              sm="6"
+              lg="6"
+            >
+              <CheckinsArrivalCard />
+            </VCol>
+            <VCol
+              cols="12"
+              sm="6"
+              lg="6"
+            >
+              <CheckinsLateRankingCard />
+            </VCol>
+          </VRow>
+        </VCardText>
+      </VCard>
       <!-- 👉 Source Visits -->
     </VCol>
   </VRow>

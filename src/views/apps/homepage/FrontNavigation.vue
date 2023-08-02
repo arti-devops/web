@@ -1,33 +1,34 @@
 <script setup>
 const items = [
   {
-    title: 'Absentéisme',
+    title: 'Pointages',
     value: 1,
-    prependIcon: 'tabler-folder',
+    prependIcon: 'tabler-run',
+    link: 'checkins',
   },
   {
-    title: 'Liste des Postes',
+    title: 'Annuaire',
     value: 2,
-    prependIcon: 'tabler-users',
+    prependIcon: 'tabler-device-landline-phone',
+    link: 'contactlist',
   },
   {
-    title: 'Starred',
+    title: 'Imprimantes',
     value: 3,
-    prependIcon: 'tabler-star',
+    prependIcon: 'tabler-printer',
+    link: 'printerslist',
   },
 ]
 </script>
 
 <template>
   <VBtn
-    color="secodary"
-    variant="text"
+    color="warning"
+    variant="plain"
     to="homepage"
+    prepend-icon="tabler-arrow-back"
+    class="ml-4"
   >
-    <VIcon
-      icon="tabler-arrow-back"
-      size="25"
-    />
     &nbsp; Acceuil
   </VBtn>
   <VDivider class="mt-2 mb-4" />
@@ -42,16 +43,13 @@ const items = [
       :key="item.value"
       :value="item.value"
     >
-      <template #prepend>
-        <VIcon
-          :icon="item.prependIcon"
-          class="me-3"
-        />
-      </template>
-
-      <VListItemTitle>
+      <VBtn
+        :to="item.link"
+        :prepend-icon="item.prependIcon"
+        variant="plain"
+      >
         {{ item.title }}
-      </VListItemTitle>
+      </VBtn>
     </VListItem>
   </VList>
 </template>
