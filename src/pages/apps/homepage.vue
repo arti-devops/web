@@ -3,29 +3,31 @@ import ApplicationZone from '@/views/apps/homepage/ApplicationZone.vue'
 import HomePageHeader from '@/views/apps/homepage/HomePageHeader.vue'
 
 // 👉 IMAGES
-import gift from '@images/svg/gift.svg'
-import keyboard from '@images/svg/keyboard.svg'
-import rocket from '@images/svg/rocket.svg'
+import phone from '@images/svg/phone.svg'
+import printer from '@images/svg/printer.svg'
+import run from '@images/svg/run.svg'
+
+//import rocket from '@images/svg/rocket.svg'
 
 const popularArticles = [
   {
     slug: 'getting-started',
     title: 'Pointages',
-    img: rocket,
+    img: run,
     link: '../dashboards/checkins',
     subtitle: 'Liste des arrviées journalières et mensuelles',
   },
   {
     slug: 'first-steps',
     title: 'Liste des Postes',
-    img: gift,
+    img: phone,
     link: 'contactlist',
     subtitle: 'Consulter la liste des projets et activitées',
   },
   {
     slug: 'external-content',
     title: 'Equipements',
-    img: keyboard,
+    img: printer,
     link: '',
     subtitle: 'Consulter la liste du matériel',
   },
