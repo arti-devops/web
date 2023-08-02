@@ -1,6 +1,7 @@
 <script setup>
 import axios from '@axios'
 import LogoARTI from '@/views/apps/homepage/logo/ARTI.png'
+import { currentDate } from '@/plugins/helpers'
 import UserProfileHeaderBg from '@images/pages/user-profile-header-bg.png'
 </script>
 
@@ -20,6 +21,7 @@ import UserProfileHeaderBg from '@images/pages/user-profile-header-bg.png'
           size="120"
           :image="LogoARTI"
           class="user-profile-avatar mx-auto"
+          style="border-color: rgba(119, 201, 240, 23.7%);"
         />
       </div>
 
@@ -30,38 +32,48 @@ import UserProfileHeaderBg from '@images/pages/user-profile-header-bg.png'
 
         <div class="d-flex align-center justify-center justify-sm-space-between flex-wrap gap-4">
           <div class="d-flex flex-wrap justify-center justify-sm-start flex-grow-1 gap-2">
-            <span class="d-flex">
+            <VBtn
+              color="secodary"
+              variant="text"
+            >
               <VIcon
-                size="20"
+                icon="tabler-building"
+                size="25"
+              />
+              &nbsp; Plannification
+            </VBtn>
+            <VBtn
+              color="secodary"
+              variant="text"
+            >
+              <VIcon
                 icon="tabler-color-swatch"
-                class="me-1"
+                size="25"
               />
-              <span class="text-body-1">
-                informations
-              </span>
-            </span>
+              &nbsp; Informations
+            </VBtn>
 
-            <span class="d-flex align-center">
+            <VBtn
+              color="secodary"
+              variant="text"
+            >
               <VIcon
-                size="20"
-                icon="tabler-map-pin"
-                class="me-2"
+                icon="tabler-chart-bar"
+                size="25"
               />
-              <span class="text-body-1">
-                Données
-              </span>
-            </span>
+              &nbsp; Statistiques
+            </VBtn>
 
-            <span class="d-flex align-center">
+            <VBtn
+              color="secodary"
+              variant="text"
+            >
               <VIcon
-                size="20"
                 icon="tabler-calendar"
-                class="me-2"
+                size="25"
               />
-              <span class="text-body-1">
-                Plannification
-              </span>
-            </span>
+              &nbsp; {{ currentDate() }}
+            </VBtn>
           </div>
 
           <VBtn prepend-icon="tabler-login">

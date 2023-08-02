@@ -12,14 +12,14 @@ const popularArticles = [
     slug: 'getting-started',
     title: 'Pointages',
     img: rocket,
-    link: 'dashboards/checkins',
+    link: '../dashboards/checkins',
     subtitle: 'Liste des arrviées journalières et mensuelles',
   },
   {
     slug: 'first-steps',
-    title: 'Projets',
+    title: 'Liste des Postes',
     img: gift,
-    link: 'project/list',
+    link: 'contactlist',
     subtitle: 'Consulter la liste des projets et activitées',
   },
   {
