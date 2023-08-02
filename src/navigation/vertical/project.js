@@ -1,5 +1,6 @@
 export default [
   { heading: 'Suivi & Evaluation' },
+  { title: 'Homepage', to: 'apps-homepage', target: '_blank' },
   {
     title: 'Absentéisme',
     icon: { icon: 'tabler-run' },
