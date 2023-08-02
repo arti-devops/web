@@ -327,13 +327,10 @@ watchEffect(d)
                     Niveau de jaune: {{ slotProps.item.raw.device_levels['yello'] }} %
                   </p>
                   <p class="my-1">
-                    Niveau de magneta: {{ slotProps.item.raw.device_levels['magenta'] }} %
+                    Niveau de cyan: {{ slotProps.item.raw.device_levels['cyan'] }} %
                   </p>
                   <p class="my-1">
-                    Niveau de bleu: {{ slotProps.item.raw.device_levels['cyan'] }} %
-                  </p>
-                  <p class="my-1">
-                    Niveau de rouge: {{ slotProps.item.raw.device_levels['magneta'] }} %
+                    Niveau de magenta: {{ slotProps.item.raw.device_levels['magneta'] }} %
                   </p>
                 </td>
               </tr>
