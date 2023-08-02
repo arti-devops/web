@@ -14,7 +14,7 @@ const popularArticles = [
     slug: 'getting-started',
     title: 'Pointages',
     img: run,
-    link: '../dashboards/checkins',
+    link: 'checkins',
     subtitle: 'Liste des arrviées journalières et mensuelles',
   },
   {
