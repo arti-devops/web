@@ -1,7 +1,7 @@
 <script setup>
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { initialAbility } from '@/plugins/casl/ability'
 import { useAppAbility } from '@/plugins/casl/useAppAbility'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
 const router = useRouter()
 const ability = useAppAbility()
@@ -14,7 +14,7 @@ const logout = () => {
 
   // Remove "accessToken" from localStorage
   localStorage.removeItem('accessToken')
-  router.push('/login').then(() => {
+  router.push('/').then(() => {
 
     // Remove "userAbilities" from localStorage
     localStorage.removeItem('userAbilities')

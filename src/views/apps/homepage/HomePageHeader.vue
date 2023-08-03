@@ -76,7 +76,10 @@ import UserProfileHeaderBg from '@images/pages/user-profile-header-bg.png'
             </VBtn>
           </div>
 
-          <VBtn prepend-icon="tabler-login">
+          <VBtn
+            prepend-icon="tabler-login"
+            to="../login"
+          >
             S'identifier
           </VBtn>
         </div>
