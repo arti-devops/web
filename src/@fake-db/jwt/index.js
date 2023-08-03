@@ -26,11 +26,11 @@ const userTokens = [
 const database = [
   {
     id: 1,
-    fullName: 'John Doe',
-    username: 'johndoe',
+    fullName: 'Alassane CISSE',
+    username: 'alassane',
     password: 'admin',
     avatar: avatar1,
-    email: 'admin@demo.com',
+    email: 'al-moustapha.cisse@arti.ci',
     role: 'admin',
     abilities: [
       {

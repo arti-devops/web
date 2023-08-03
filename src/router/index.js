@@ -16,7 +16,7 @@ const router = createRouter({
         const userRole = (userData && userData.role) ? userData.role : null
         if (!userData || !userRole) return { name: 'apps-homepage' }
         if (userRole === 'admin')
-          return { name: 'dashboards-analytics' }
+          return { name: 'dashboards-checkins' }
         if (userRole === 'client')
           return { name: 'access-control' }
         

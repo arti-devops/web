@@ -6,7 +6,7 @@ import { useThemeConfig } from '@core/composable/useThemeConfig'
 import { AppContentLayoutNav } from '@layouts/enums'
 
 const DefaultLayoutWithHorizontalNav = defineAsyncComponent(() => import('./components/DefaultLayoutWithHorizontalNav.vue'))
-const DefaultLayoutWithVerticalNav = defineAsyncComponent(() => import('./components/DefaultLayoutWithVerticalNav.vue'))
+const MyDefaultLayoutWithVerticalNav = defineAsyncComponent(() => import('./components/MyDefaultLayoutWithVerticalNav.vue'))
 const { width: windowWidth } = useWindowSize()
 const { appContentLayoutNav, switchToVerticalNavOnLtOverlayNavBreakpoint } = useThemeConfig()
 
@@ -20,7 +20,7 @@ injectSkinClasses()
 
 <template>
   <template v-if="appContentLayoutNav === AppContentLayoutNav.Vertical">
-    <DefaultLayoutWithVerticalNav v-bind="layoutAttrs" />
+    <MyDefaultLayoutWithVerticalNav v-bind="layoutAttrs" />
   </template>
   <template v-else>
     <DefaultLayoutWithHorizontalNav v-bind="layoutAttrs" />
