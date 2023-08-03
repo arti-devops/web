@@ -142,3 +142,9 @@ watchEffect(tabs)
     </VCol>
   </VRow>
 </template>
+
+<route lang="yaml">
+meta:
+  action: read
+  subject: ProjectPage
+</route>

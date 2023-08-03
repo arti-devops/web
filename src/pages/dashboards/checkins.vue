@@ -25,6 +25,12 @@ import CheckinsLateRankingCard from '@/views/dashboards/checkins/CheckinsLateRan
   </VRow>
 </template>
 
+<route lang="yaml">
+  meta:
+    action: read
+    subject: Dashboards
+</route>
+
 <style lang="scss">
 @use "@core/scss/template/libs/apex-chart.scss";
 </style>

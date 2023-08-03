@@ -1,5 +1,6 @@
 import mock from '@/@fake-db/mock'
 import { genId } from '@/@fake-db/utils'
+import avatar0 from '@images/avatars/avatar-0.png'
 import avatar1 from '@images/avatars/avatar-1.png'
 import avatar2 from '@images/avatars/avatar-2.png'
 
@@ -40,13 +41,28 @@ const database = [
     ],
   },
   {
+    id: 3,
+    fullName: 'Developper',
+    username: 'developper',
+    password: 'devarti',
+    avatar: avatar0,
+    email: 'dev@arti.ci',
+    role: 'admin',
+    abilities: [
+      {
+        action: 'manage',
+        subject: 'all',
+      },
+    ],
+  },
+  {
     id: 2,
-    fullName: 'Jane Doe',
-    username: 'janedoe',
+    fullName: 'Lamine Djiré',
+    username: 'lamine',
     password: 'client',
     avatar: avatar2,
-    email: 'client@demo.com',
-    role: 'client',
+    email: 'lamine.djire@arti.ci',
+    role: 'user',
     abilities: [
       {
         action: 'read',
@@ -54,7 +70,11 @@ const database = [
       },
       {
         action: 'read',
-        subject: 'AclDemo',
+        subject: 'ProjectPage',
+      },
+      {
+        action: 'read',
+        subject: 'Dashboards',
       },
     ],
   },

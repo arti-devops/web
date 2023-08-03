@@ -54,4 +54,6 @@ const popularArticles = [
 <route lang="yaml">
 meta:
   layout: blank
+  action: read
+  subject: Auth
 </route>

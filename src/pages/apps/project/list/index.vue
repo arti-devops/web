@@ -448,6 +448,12 @@ watchEffect(queryProjects)
   </section>
 </template>
 
+<route lang="yaml">
+meta:
+  action: read
+  subject: ProjectPage
+</route>
+
 <style lang="scss">
 .app-user-search-filter {
   inline-size: 31.6rem;

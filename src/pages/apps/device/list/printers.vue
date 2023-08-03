@@ -544,6 +544,12 @@ watchEffect(d)
   </section>
 </template>
 
+<route lang="yaml">
+meta:
+  action: read
+  subject: DevicePage
+</route>
+
 <style lang="scss">
 .app-user-search-filter {
   inline-size: 31.6rem;
