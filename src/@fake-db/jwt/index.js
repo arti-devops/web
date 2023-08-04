@@ -59,7 +59,7 @@ const database = [
     id: 2,
     fullName: 'Lamine Djiré',
     username: 'lamine',
-    password: 'client',
+    password: 'lamine@djire',
     avatar: avatar2,
     email: 'lamine.djire@arti.ci',
     role: 'user',
