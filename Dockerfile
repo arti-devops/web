@@ -1,31 +1,25 @@
-# Étape 1 : Utiliser une image Node.js pour la construction
-FROM node:14 as builder
-
-# Définir le répertoire de travail à l'intérieur du conteneur
+# Étape 1 : Builder l'application Vue.js
+FROM node:14 as build-stage
 WORKDIR /app
-
-# Copier les fichiers de l'application dans le conteneur
 COPY package*.json ./
-COPY . .
-
-# Installer les dépendances
 RUN npm install
-
-# Construire l'application Vue.js pour la production
+COPY . .
 RUN npm run build
 
-# Étape 2 : Utiliser une image Nginx pour le déploiement de l'application
-FROM nginx:1.21
+# Étape 2 : Serveur Nginx pour héberger l'application
+FROM nginx:1.21.6
 
-# Copier les fichiers de build de l'étape précédente dans le conteneur Nginx
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Supprimer le fichier de configuration par défaut de Nginx
+RUN rm /etc/nginx/conf.d/default.conf
 
-# Exposer le port 80 pour que l'application soit accessible
+# Copier votre propre fichier de configuration Nginx
+COPY default.conf /etc/nginx/conf.d/nginx.conf
+
+# Copier le fichier build-icons.js dans le répertoire approprié de Docker
+COPY src/@iconify/build-icons.js /app/src/@iconify/build-icons.js
+
+# Copier les fichiers de l'application construite
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
 EXPOSE 80
-
-# Démarrer le serveur Nginx une fois que le conteneur est lancé
 CMD ["nginx", "-g", "daemon off;"]
-
-
-
-
