@@ -44,6 +44,7 @@ const props = defineProps({
                 size="small"
                 variant="tonal"
                 :to="article.link"
+                :disabled="article.disable"
                 prepend-icon="tabler-click"
               >
                 Entrer

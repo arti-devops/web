@@ -16,6 +16,7 @@ const popularArticles = [
     img: run,
     link: 'checkins',
     subtitle: 'Liste des arrviées journalières et mensuelles',
+    disable: true,
   },
   {
     slug: 'first-steps',
