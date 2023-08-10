@@ -40,15 +40,33 @@ const props = defineProps({
                 {{ article.subtitle }}
               </p>
 
-              <VBtn
-                size="small"
-                variant="tonal"
-                :to="article.link"
-                :disabled="article.disable"
-                prepend-icon="tabler-click"
+              <a
+                v-if="article.link.startsWith('http')"
+                :href="article.link"
+                target="blank"
               >
-                Entrer
-              </VBtn>
+                <VBtn
+                  size="small"
+                  variant="tonal"
+                  :disabled="article.disable"
+                  prepend-icon="tabler-click"
+                >
+                  Entrer
+                </VBtn>
+              </a>
+              <RouterLink
+                v-else
+                :to="article.link"
+              >
+                <VBtn
+                  size="small"
+                  variant="tonal"
+                  :disabled="article.disable"
+                  prepend-icon="tabler-click"
+                >
+                  Entrer
+                </VBtn>
+              </RouterLink>
             </VCardText>
           </VCard>
         </VCol>

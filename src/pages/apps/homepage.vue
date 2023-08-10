@@ -6,6 +6,8 @@ import HomePageHeader from '@/views/apps/homepage/HomePageHeader.vue'
 import phone from '@images/svg/phone.svg'
 import printer from '@images/svg/printer.svg'
 import run from '@images/svg/run.svg'
+import car from '@images/svg/car.svg'
+import tools from '@images/svg/tools.svg'
 
 //import rocket from '@images/svg/rocket.svg'
 
@@ -15,7 +17,7 @@ const popularArticles = [
     title: 'Pointages',
     img: run,
     link: 'checkins',
-    subtitle: 'Liste des arrviées journalières et mensuelles',
+    subtitle: 'Consulter pointages',
     disable: true,
   },
   {
@@ -23,14 +25,28 @@ const popularArticles = [
     title: 'Annuaire',
     img: phone,
     link: 'contactlist',
-    subtitle: 'Consulter la liste des postes téléphoniques',
+    subtitle: 'Consulter postes téléphoniques',
   },
   {
     slug: 'external-content',
     title: 'Imprimantes',
     img: printer,
     link: 'printerslist',
-    subtitle: 'Consulter la liste des imprimates',
+    subtitle: 'Consulter imprimates',
+  },
+  {
+    slug: 'external-content',
+    title: 'Véhicules',
+    img: car,
+    link: 'cars',
+    subtitle: ' Réservation de véhicule de pool',
+  },
+  {
+    slug: 'external-content',
+    title: 'Support IT',
+    img: tools,
+    link: 'support',
+    subtitle: 'Demande de service',
   },
 ]
 </script>

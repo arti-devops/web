@@ -5,6 +5,7 @@ const items = [
     value: 1,
     prependIcon: 'tabler-run',
     link: 'checkins',
+    disable: true,
   },
   {
     title: 'Annuaire',
@@ -17,6 +18,18 @@ const items = [
     value: 3,
     prependIcon: 'tabler-printer',
     link: 'printerslist',
+  },
+  {
+    title: 'Véhicules',
+    value: 4,
+    prependIcon: 'tabler-car',
+    link: 'cars',
+  },
+  {
+    title: 'Support IT',
+    value: 5,
+    prependIcon: 'tabler-tool',
+    link: 'support',
   },
 ]
 </script>
@@ -46,6 +59,7 @@ const items = [
       <VBtn
         :to="item.link"
         :prepend-icon="item.prependIcon"
+        :disabled="item.disable"
         variant="plain"
       >
         {{ item.title }}
